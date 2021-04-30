@@ -17,7 +17,7 @@ interface CollectionDatabaseDao {
         """
         SELECT collection_table.id, name, color, content AS item
         FROM collection_table
-        INNER JOIN item_table
+        LEFT JOIN item_table
         ON collection_table.id = item_table.collectionId
     """
     )

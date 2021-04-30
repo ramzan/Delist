@@ -1,13 +1,19 @@
 package ca.ramzan.delist.screens.collection_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import ca.ramzan.delist.R
+import ca.ramzan.delist.common.safeNavigate
 import ca.ramzan.delist.databinding.FragmentCollectionListBinding
 import ca.ramzan.delist.screens.BaseFragment
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -22,6 +28,8 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
     ): View {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
 
+        setUpBottomBar()
+
         val adapter = CollectionAdapter(object : CollectionAdapter.OnClickListener {
 
         })
@@ -30,6 +38,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.collections.collect {
+                Log.d("zoop", it.toString())
                 adapter.submitList(it)
             }
         }
@@ -37,4 +46,18 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         return binding.root
     }
 
+    private fun setUpBottomBar() {
+        requireActivity().run {
+            findViewById<BottomAppBar>(R.id.bottom_app_bar).visibility = View.VISIBLE
+            findViewById<FloatingActionButton>(R.id.fab).run {
+                setImageResource(R.drawable.ic_baseline_add_24)
+                setOnClickListener {
+                    findNavController(R.id.nav_host_fragment).safeNavigate(
+                        CollectionListFragmentDirections.actionCollectionListFragmentToCollectionEditorFragment()
+                    )
+                }
+                show()
+            }
+        }
+    }
 }

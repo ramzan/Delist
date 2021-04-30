@@ -2,4 +2,8 @@
     <string name="app_name">Delist</string>
     <string name="name_input_hint">Name</string>
     <string name="new_collection_button_description">New collection button</string>
+    <string name="nameInputHint">Name</string>
+    <string name="type">Type</string>
+    <string name="create_collection">Create collection</string>
+    <string name="edit_collection">Edit collection</string>
 </resources>

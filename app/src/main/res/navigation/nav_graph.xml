@@ -11,8 +11,11 @@
         android:label="fragment_collection_list"
         tools:layout="@layout/fragment_collection_list">
         <action
-            android:id="@+id/action_collectionListFragment_to_collectionEditorFragment"
+            android:id="@+id/action_collectionListFragment_to_collectionDetailFragment"
             app:destination="@id/collectionDetailFragment" />
+        <action
+            android:id="@+id/action_collectionListFragment_to_collectionEditorFragment"
+            app:destination="@id/collectionEditorFragment" />
     </fragment>
     <fragment
         android:id="@+id/collectionDetailFragment"
@@ -21,6 +24,19 @@
         tools:layout="@layout/fragment_collection_detail">
         <argument
             android:name="collectionId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_collectionDetailFragment_to_collectionEditorFragment"
+            app:destination="@id/collectionEditorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/collectionEditorFragment"
+        android:name="ca.ramzan.delist.screens.collection_editor.CollectionEditorFragment"
+        android:label="fragment_collection_editor"
+        tools:layout="@layout/fragment_collection_editor">
+        <argument
+            android:name="collectionId"
+            android:defaultValue="0L"
             app:argType="long" />
     </fragment>
 </navigation>

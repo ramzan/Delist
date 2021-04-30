@@ -1,0 +1,86 @@
+package ca.ramzan.delist.screens.collection_editor
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import ca.ramzan.delist.R
+import ca.ramzan.delist.databinding.FragmentCollectionEditorBinding
+import ca.ramzan.delist.screens.BaseFragment
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>() {
+
+    @Inject
+    lateinit var factory: CollectionEditorViewModel.Factory
+
+    private val viewModel: CollectionEditorViewModel by viewModels {
+        CollectionEditorViewModel.provideFactory(
+            factory,
+            requireArguments().getLong("collectionId")
+        )
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        mutableBinding = FragmentCollectionEditorBinding.inflate(inflater)
+
+        setUpBottomBar()
+
+        binding.apply {
+            editorToolbar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+
+            editorToolbar.title = getString(
+                if (requireArguments().getLong("collectionId") == 0L)
+                    R.string.create_collection else R.string.edit_collection
+            )
+
+            editorToolbar.menu.getItem(0).setOnMenuItemClickListener {
+                viewModel.saveCollection()
+                findNavController().popBackStack()
+            }
+
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                viewModel.state.collect { state ->
+                    when (state) {
+                        EditorState.Loading -> {
+                            editorProgressbar.visibility = View.VISIBLE
+                            editorLayout.visibility = View.GONE
+                        }
+                        is EditorState.Loaded -> {
+                            nameInput.setText(state.nameInputText)
+
+                            nameInput.doOnTextChanged { text, start, before, count ->
+                                state.nameInputText = text.toString()
+                            }
+                            editorProgressbar.visibility = View.GONE
+                            editorLayout.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+        }
+
+        return binding.root
+    }
+
+    private fun setUpBottomBar() {
+        requireActivity().run {
+            findViewById<FloatingActionButton>(R.id.fab).hide()
+            findViewById<BottomAppBar>(R.id.bottom_app_bar).visibility = View.INVISIBLE
+        }
+    }
+}
