@@ -20,6 +20,8 @@ data class Item(
 
     val content: String,
 
+    val completed: Boolean = false,
+
     @PrimaryKey
     val id: Long = 0,
 )

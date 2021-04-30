@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/nav_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/collectionListFragment">
 
+    <fragment
+        android:id="@+id/collectionListFragment"
+        android:name="ca.ramzan.delist.screens.collection_list.CollectionListFragment"
+        android:label="fragment_collection_list"
+        tools:layout="@layout/fragment_collection_list">
+        <action
+            android:id="@+id/action_collectionListFragment_to_collectionEditorFragment"
+            app:destination="@id/collectionDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/collectionDetailFragment"
+        android:name="ca.ramzan.delist.screens.collection_detail.CollectionDetailFragment"
+        android:label="fragment_collection_detail"
+        tools:layout="@layout/fragment_collection_detail">
+        <argument
+            android:name="collectionId"
+            app:argType="long" />
+    </fragment>
 </navigation>

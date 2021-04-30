@@ -4,15 +4,21 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 enum class CollectionType {
-    STACK, QUEUE, RANDOM
+    STACK, QUEUE, RANDOMIZER
 }
 
 @Entity(tableName = "collection_table")
 data class Collection(
     val type: CollectionType,
 
-    val currentItem: String?,
+    val name: String,
+
+    val color: Int,
+
+    val currentItemId: Long?,
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 )
+
+class CollectionDisplay(val id: Long, val name: String, val color: Int, val item: String?)
