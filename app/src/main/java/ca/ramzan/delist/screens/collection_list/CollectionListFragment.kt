@@ -1,7 +1,6 @@
 package ca.ramzan.delist.screens.collection_list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,34 +21,36 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
     private val viewModel: CollectionListViewModel by viewModels()
 
+    override fun onStart() {
+        super.onStart()
+        setUpBottomBar()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
 
-        setUpBottomBar()
-
         val adapter = CollectionAdapter(object : CollectionAdapter.OnClickListener {
 
         })
 
-        binding.collectionList.adapter = adapter
-
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.collections.collect {
-                Log.d("zoop", it.toString())
                 adapter.submitList(it)
             }
         }
+
+        binding.collectionList.adapter = adapter
 
         return binding.root
     }
 
     private fun setUpBottomBar() {
         requireActivity().run {
-            findViewById<BottomAppBar>(R.id.bottom_app_bar).visibility = View.VISIBLE
-            findViewById<FloatingActionButton>(R.id.fab).run {
+            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.visibility = View.VISIBLE
+            findViewById<FloatingActionButton>(R.id.fab)?.run {
                 setImageResource(R.drawable.ic_baseline_add_24)
                 setOnClickListener {
                     findNavController(R.id.nav_host_fragment).safeNavigate(

@@ -12,6 +12,6 @@
         android:clipToPadding="false"
         android:paddingBottom="?attr/actionBarSize"
         app:layoutManager="LinearLayoutManager"
-        tools:listItem="@layout/list_item_collection" />
+        tools:listitem="@layout/list_item_collection" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

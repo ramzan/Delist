@@ -19,6 +19,7 @@ interface CollectionDatabaseDao {
         FROM collection_table
         LEFT JOIN item_table
         ON collection_table.id = item_table.collectionId
+        ORDER BY name COLLATE NOCASE ASC
     """
     )
     fun getCollectionDisplays(): Flow<List<CollectionDisplay>>

@@ -30,17 +30,20 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
         )
     }
 
+    override fun onStart() {
+        super.onStart()
+        setUpBottomBar()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mutableBinding = FragmentCollectionEditorBinding.inflate(inflater)
 
-        setUpBottomBar()
-
         binding.apply {
             editorToolbar.setNavigationOnClickListener {
-                findNavController().popBackStack()
+                findNavController().popBackStack(R.id.collectionListFragment, false)
             }
 
             editorToolbar.title = getString(
@@ -79,8 +82,8 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
 
     private fun setUpBottomBar() {
         requireActivity().run {
-            findViewById<FloatingActionButton>(R.id.fab).hide()
-            findViewById<BottomAppBar>(R.id.bottom_app_bar).visibility = View.INVISIBLE
+            findViewById<FloatingActionButton>(R.id.fab)?.hide()
+            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.visibility = View.INVISIBLE
         }
     }
 }
