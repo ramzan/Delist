@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 enum class CollectionType {
-    STACK, QUEUE, RANDOMIZER
+    QUEUE, STACK, RANDOMIZER
 }
 
 @Entity(tableName = "collection_table")

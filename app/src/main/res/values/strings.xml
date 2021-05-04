@@ -6,4 +6,14 @@
     <string name="type">Type</string>
     <string name="create_collection">Create collection</string>
     <string name="edit_collection">Edit collection</string>
+    <string name="type_queue">Queue</string>
+    <string name="type_stack">Stack</string>
+    <string name="type_randomizer">Randomizer</string>
+
+    <string-array name="collection_type_array">
+        <item>@string/type_queue</item>
+        <item>@string/type_stack</item>
+        <item>@string/type_randomizer</item>
+    </string-array>
+
 </resources>

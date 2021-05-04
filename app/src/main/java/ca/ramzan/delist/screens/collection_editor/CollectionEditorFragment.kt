@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import ca.ramzan.delist.R
 import ca.ramzan.delist.databinding.FragmentCollectionEditorBinding
+import ca.ramzan.delist.room.CollectionType
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -56,6 +57,14 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
                 findNavController().popBackStack()
             }
 
+            typeSelector.setAdapter(
+                NoFilterAdapter(
+                    requireContext(),
+                    R.layout.list_item_type_selector,
+                    resources.getStringArray(R.array.collection_type_array)
+                )
+            )
+
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.state.collect { state ->
                     when (state) {
@@ -66,9 +75,17 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
                         is EditorState.Loaded -> {
                             nameInput.setText(state.nameInputText)
 
-                            nameInput.doOnTextChanged { text, start, before, count ->
+                            nameInput.doOnTextChanged { text, _, _, _ ->
                                 state.nameInputText = text.toString()
                             }
+
+                            typeSelector.setText(getCollectionTypeName(state.collectionType), false)
+
+                            typeSelector.setOnItemClickListener { _, _, _, _ ->
+                                state.collectionType =
+                                    getCollectionType(typeSelector.text.toString())
+                            }
+
                             editorProgressbar.visibility = View.GONE
                             editorLayout.visibility = View.VISIBLE
                         }
@@ -78,6 +95,23 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
         }
 
         return binding.root
+    }
+
+    private fun getCollectionTypeName(type: CollectionType): String {
+        return when (type) {
+            CollectionType.QUEUE -> getString(R.string.type_queue)
+            CollectionType.STACK -> getString(R.string.type_stack)
+            CollectionType.RANDOMIZER -> getString(R.string.type_randomizer)
+        }
+    }
+
+    private fun getCollectionType(type: String): CollectionType {
+        return when (type) {
+            getString(R.string.type_queue) -> CollectionType.QUEUE
+            getString(R.string.type_stack) -> CollectionType.STACK
+            getString(R.string.type_randomizer) -> CollectionType.RANDOMIZER
+            else -> throw Exception("Illegal type selection: type")
+        }
     }
 
     private fun setUpBottomBar() {
