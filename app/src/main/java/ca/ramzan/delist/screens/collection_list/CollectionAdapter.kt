@@ -1,5 +1,6 @@
 package ca.ramzan.delist.screens.collection_list
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -23,6 +24,7 @@ class CollectionAdapter(private val onClickListener: OnClickListener) :
             binding.itemText.text = item.item
             binding.completeItemButton.setOnClickListener {
             }
+            binding.root.background.setTint(Color.parseColor("#${item.color}"))
         }
 
         companion object {

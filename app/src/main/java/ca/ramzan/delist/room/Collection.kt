@@ -13,7 +13,7 @@ data class Collection(
 
     val name: String,
 
-    val color: Int,
+    val color: String,
 
     val currentItemId: Long?,
 
@@ -21,4 +21,4 @@ data class Collection(
     val id: Long = 0,
 )
 
-class CollectionDisplay(val id: Long, val name: String, val color: Int, val item: String?)
+class CollectionDisplay(val id: Long, val name: String, val color: String, val item: String?)

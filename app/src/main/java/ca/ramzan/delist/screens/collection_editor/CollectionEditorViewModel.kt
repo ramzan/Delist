@@ -41,7 +41,7 @@ class CollectionEditorViewModel @AssistedInject constructor(
                     Collection(
                         collectionType,
                         nameInputText,
-                        0,
+                        "880000",
                         null
                     )
                 )
