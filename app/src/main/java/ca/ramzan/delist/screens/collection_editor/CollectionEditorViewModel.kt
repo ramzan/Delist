@@ -25,18 +25,20 @@ class CollectionEditorViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            state.emit(
-                if (collectionId == 0L) EditorState.Loaded()
-                else {
+            if (collectionId == 0L) state.emit(EditorState.Loaded())
+            else {
+                CoroutineScope(Dispatchers.IO).launch {
                     val oldCollection = dao.getCollection(collectionId)
-                    EditorState.Loaded(
-                        oldCollection.name,
-                        oldCollection.type,
-                        oldCollection.color,
-                        oldCollection
+                    state.emit(
+                        EditorState.Loaded(
+                            oldCollection.name,
+                            oldCollection.type,
+                            oldCollection.color,
+                            oldCollection
+                        )
                     )
                 }
-            )
+            }
         }
     }
 
