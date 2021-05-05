@@ -11,7 +11,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/editorToolbar"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            style="@style/Widget.MaterialComponents.Toolbar.Surface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/editor_menu"
@@ -37,18 +37,22 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/name_input_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/defaultPadding"
                 android:hint="@string/nameInputHint"
-                android:padding="@dimen/defaultPadding">
+                android:paddingVertical="@dimen/defaultPadding"
+                app:layout_constraintBottom_toTopOf="@id/type_selector_container"
+                app:layout_constraintEnd_toStartOf="@id/color_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/name_input"
@@ -57,13 +61,28 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <ImageButton
+                android:id="@+id/color_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="@dimen/defaultPadding"
+                android:background="@drawable/list_item_color_bg"
+                android:contentDescription="Choose color button"
+                android:foreground="@drawable/list_item_color_fg"
+                app:layout_constraintBottom_toBottomOf="@id/name_input_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/name_input_layout"
+                app:layout_constraintTop_toTopOf="@id/name_input_layout" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/type_selector_container"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/defaultPadding"
-                android:paddingBottom="@dimen/defaultPadding">
+                android:paddingBottom="@dimen/defaultPadding"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name_input_layout">
 
                 <AutoCompleteTextView
                     android:id="@+id/type_selector"
@@ -74,7 +93,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 

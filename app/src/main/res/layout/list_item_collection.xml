@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/CollectionDisplayTheme"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
     android:background="@drawable/list_item_collection_bg"
+    android:foreground="@drawable/list_item_collection_fg"
     android:padding="12dp">
 
     <TextView
@@ -32,7 +34,7 @@
 
     <Button
         android:id="@+id/complete_item_button"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Done"

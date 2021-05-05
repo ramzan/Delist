@@ -1,13 +1,13 @@
 package ca.ramzan.delist.screens.collection_list
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.delist.databinding.ListItemCollectionBinding
-import ca.ramzan.delist.room.CollectionDisplay
 
 class CollectionAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<CollectionDisplay, CollectionAdapter.ListItemCollectionViewHolder>(
@@ -24,7 +24,11 @@ class CollectionAdapter(private val onClickListener: OnClickListener) :
             binding.itemText.text = item.item
             binding.completeItemButton.setOnClickListener {
             }
-            binding.root.background.setTint(Color.parseColor("#${item.color}"))
+            binding.root.background.colorFilter =
+                BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                    item.color,
+                    BlendModeCompat.SRC_ATOP
+                )
         }
 
         companion object {
@@ -64,3 +68,5 @@ class CollectionDiffCallback : DiffUtil.ItemCallback<CollectionDisplay>() {
                 oldItem.color == newItem.color
     }
 }
+
+class CollectionDisplay(val id: Long, val name: String, val color: Int, val item: String?)

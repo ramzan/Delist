@@ -22,7 +22,7 @@ interface CollectionDatabaseDao {
         ORDER BY name COLLATE NOCASE ASC
     """
     )
-    fun getCollectionDisplays(): Flow<List<CollectionDisplay>>
+    fun getCollectionDisplays(): Flow<List<CollectionDisplayData>>
 
     @Transaction
     fun completeTask(collectionId: Long) {

@@ -38,5 +38,12 @@
             android:name="collectionId"
             android:defaultValue="0L"
             app:argType="long" />
+        <action
+            android:id="@+id/action_collectionEditorFragment_to_colorPickerDialogFragment"
+            app:destination="@id/colorPickerDialogFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/colorPickerDialogFragment"
+        android:name="ca.ramzan.delist.screens.color_picker.ColorPickerDialogFragment"
+        android:label="ColorPickerDialogFragment" />
 </navigation>

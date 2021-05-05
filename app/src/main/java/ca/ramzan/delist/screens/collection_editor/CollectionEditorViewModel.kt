@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import ca.ramzan.delist.room.Collection
+import ca.ramzan.delist.room.CollectionColor
 import ca.ramzan.delist.room.CollectionDatabaseDao
 import ca.ramzan.delist.room.CollectionType
 import dagger.assisted.Assisted
@@ -25,10 +26,15 @@ class CollectionEditorViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             state.emit(
-                if (collectionId == 0L) EditorState.Loaded("", CollectionType.QUEUE, null)
+                if (collectionId == 0L) EditorState.Loaded()
                 else {
                     val oldCollection = dao.getCollection(collectionId)
-                    EditorState.Loaded(oldCollection.name, oldCollection.type, oldCollection)
+                    EditorState.Loaded(
+                        oldCollection.name,
+                        oldCollection.type,
+                        oldCollection.color,
+                        oldCollection
+                    )
                 }
             )
         }
@@ -41,16 +47,24 @@ class CollectionEditorViewModel @AssistedInject constructor(
                     Collection(
                         collectionType,
                         nameInputText,
-                        "880000",
+                        color,
                         null
                     )
-                )
-                else dao.updateCollection(
+                ) else dao.updateCollection(
                     oldCollection!!.copy(
                         type = collectionType,
-                        name = nameInputText
+                        name = nameInputText,
+                        color = color
                     )
                 )
+            }
+        }
+    }
+
+    fun updateColor(newColor: CollectionColor) {
+        viewModelScope.launch {
+            (state.value as? EditorState.Loaded)?.run {
+                state.emit(this.copy(color = newColor))
             }
         }
     }
@@ -80,9 +94,10 @@ class CollectionEditorViewModel @AssistedInject constructor(
 sealed class EditorState {
 
     object Loading : EditorState()
-    class Loaded(
-        var nameInputText: String,
-        var collectionType: CollectionType,
-        val oldCollection: Collection?
+    data class Loaded(
+        var nameInputText: String = "",
+        var collectionType: CollectionType = CollectionType.QUEUE,
+        val color: CollectionColor = CollectionColor.ORANGE,
+        val oldCollection: Collection? = null
     ) : EditorState()
 }

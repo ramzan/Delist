@@ -4,14 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import ca.ramzan.delist.R
+import ca.ramzan.delist.common.colorToType
+import ca.ramzan.delist.common.safeNavigate
+import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionEditorBinding
 import ca.ramzan.delist.room.CollectionType
 import ca.ramzan.delist.screens.BaseFragment
+import ca.ramzan.delist.screens.color_picker.COLOR
+import ca.ramzan.delist.screens.color_picker.COLOR_PICKER_RESULT
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +42,11 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
     override fun onStart() {
         super.onStart()
         setUpBottomBar()
+        setFragmentResultListener(COLOR_PICKER_RESULT) { _, bundle ->
+            bundle.getInt(COLOR).let { color ->
+                viewModel.updateColor(colorToType(resources, color))
+            }
+        }
     }
 
     override fun onCreateView(
@@ -65,6 +78,10 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
                 )
             )
 
+            colorButton.setOnClickListener {
+                findNavController().safeNavigate(CollectionEditorFragmentDirections.actionCollectionEditorFragmentToColorPickerDialogFragment())
+            }
+
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.state.collect { state ->
                     when (state) {
@@ -85,6 +102,17 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
                                 state.collectionType =
                                     getCollectionType(typeSelector.text.toString())
                             }
+
+                            typeToColor(resources, state.color).let { color ->
+                                editorToolbar.background.setTint(color)
+                                requireActivity().window.statusBarColor = color
+                                colorButton.background.colorFilter =
+                                    BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                                        color,
+                                        BlendModeCompat.SRC_ATOP
+                                    )
+                            }
+
 
                             editorProgressbar.visibility = View.GONE
                             editorLayout.visibility = View.VISIBLE

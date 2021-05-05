@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/color_button"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_margin="8dp"
+    android:background="@drawable/list_item_color_bg"
+    android:foreground="@drawable/list_item_color_fg" />

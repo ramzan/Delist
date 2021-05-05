@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import ca.ramzan.delist.R
 import ca.ramzan.delist.common.safeNavigate
+import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionListBinding
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -31,14 +32,22 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         savedInstanceState: Bundle?
     ): View {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
+        requireActivity().window.statusBarColor = resources.getColor(R.color.black, null)
 
         val adapter = CollectionAdapter(object : CollectionAdapter.OnClickListener {
 
         })
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.collections.collect {
-                adapter.submitList(it)
+            viewModel.collections.collect { list ->
+                adapter.submitList(list.map {
+                    CollectionDisplay(
+                        it.id,
+                        it.name,
+                        typeToColor(resources, it.color),
+                        it.item
+                    )
+                })
             }
         }
 

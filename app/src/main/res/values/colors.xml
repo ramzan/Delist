@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <color name="black">#202124</color>
     <color name="white">#FFFFFFFF</color>
+
+    <array name="palette">
+        <item>@color/plain</item>
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/teal</item>
+        <item>@color/blue</item>
+        <item>@color/dark_blue</item>
+        <item>@color/purple</item>
+        <item>@color/pink</item>
+        <item>@color/brown</item>
+        <item>@color/grey</item>
+    </array>
+
+    <color name="plain">#ffffff</color>
+    <color name="red">#f28b82</color>
+    <color name="orange">#fbbc04</color>
+    <color name="yellow">#fff475</color>
+    <color name="green">#ccff90</color>
+    <color name="teal">#a7ffeb</color>
+    <color name="blue">#cbf0f8</color>
+    <color name="dark_blue">#aecbfa</color>
+    <color name="purple">#d7aefb</color>
+    <color name="pink">#fdcfe8</color>
+    <color name="brown">#e6c9a8</color>
+    <color name="grey">#e8eaed</color>
+
 </resources>
+
