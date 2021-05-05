@@ -43,12 +43,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/name_input_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/defaultPadding"
                 android:hint="@string/nameInputHint"
                 android:paddingVertical="@dimen/defaultPadding"
+                app:colorControlActivated="@color/primary_inverse"
+                app:hintTextColor="@color/primary_inverse"
                 app:layout_constraintBottom_toTopOf="@id/type_selector_container"
                 app:layout_constraintEnd_toStartOf="@id/color_button"
                 app:layout_constraintStart_toStartOf="parent"
@@ -76,11 +77,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/type_selector_container"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/defaultPadding"
                 android:paddingBottom="@dimen/defaultPadding"
+                app:endIconTint="@color/primary_inverse"
+                app:hintTextColor="@color/primary_inverse"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/name_input_layout">
 

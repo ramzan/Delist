@@ -2,6 +2,7 @@
 <resources>
 
     <color name="primary">@color/black</color>
+    <color name="primary_inverse">@color/white</color>
 
     <color name="plain">#202124</color>-->
     <color name="red">#5c2b29</color>-->

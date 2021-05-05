@@ -13,13 +13,25 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
+        <item name="textInputStyle">@style/Widget.AppTheme.TextInputLayout</item>
     </style>
 
+    <!--Collection list-->
     <style name="CollectionDisplayTheme">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/primary_inverse</item>
     </style>
 
     <style name="TextButton" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/primary_inverse</item>
+    </style>
+
+    <!--Text input-->
+    <style name="ThemeOverlay.AppTheme.TextInputEditText.FilledBox" parent="ThemeOverlay.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="colorControlActivated">@color/primary_inverse</item>
+    </style>
+
+    <style name="Widget.AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputEditText.FilledBox
+        </item>
     </style>
 </resources>
