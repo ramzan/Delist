@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -65,7 +66,12 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         requireActivity().run {
             findViewById<BottomAppBar>(R.id.bottom_app_bar)?.run {
                 visibility = View.VISIBLE
-                fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                setFabAlignmentModeAndReplaceMenu(
+                    BottomAppBar.FAB_ALIGNMENT_MODE_CENTER,
+                    R.menu.list_menu
+                )
+                navigationIcon =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_menu_24)
             }
             findViewById<FloatingActionButton>(R.id.fab)?.run {
                 setImageResource(R.drawable.ic_baseline_add_24)

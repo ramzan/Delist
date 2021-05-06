@@ -79,6 +79,17 @@ interface CollectionDatabaseDao {
     )
     fun getIncompleteItems(collectionId: Long): List<Long>
 
+    @Query(
+        """
+            SELECT id, content
+            FROM item_table
+            WHERE item_table.collectionId = :collectionId
+            AND completed
+    """
+    )
+    fun getCompleteItems(collectionId: Long): List<CompletedItemDisplay>
+
+
     fun getRandomItem(collectionId: Long): Long? {
         return getIncompleteItems(collectionId).randomOrNull()
     }

@@ -25,3 +25,8 @@ data class Item(
     @PrimaryKey
     val id: Long = 0,
 )
+
+class CompletedItemDisplay(
+    val id: Long,
+    val content: String
+)

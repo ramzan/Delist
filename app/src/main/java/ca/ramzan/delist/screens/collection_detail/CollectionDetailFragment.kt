@@ -4,17 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import ca.ramzan.delist.R
 import ca.ramzan.delist.common.safeNavigate
 import ca.ramzan.delist.databinding.FragmentCollectionDetailBinding
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>() {
 
-    private lateinit var viewModel: CollectionDetailViewModel
+    @Inject
+    lateinit var factory: CollectionDetailViewModel.Factory
+
+    private val viewModel: CollectionDetailViewModel by viewModels {
+        CollectionDetailViewModel.provideFactory(
+            factory,
+            requireArguments().getLong("collectionId")
+        )
+    }
 
     override fun onStart() {
         super.onStart()
@@ -27,6 +42,21 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
     ): View {
         mutableBinding = FragmentCollectionDetailBinding.inflate(inflater)
 
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.state.collect { state ->
+                when (state) {
+                    DetailState.Deleted -> findNavController().popBackStack(
+                        R.id.collectionListFragment,
+                        false
+                    )
+                    is DetailState.Loaded -> {
+                    }
+                    DetailState.Loading -> {
+                    }
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -34,7 +64,20 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         requireActivity().run {
             findViewById<BottomAppBar>(R.id.bottom_app_bar)?.run {
                 visibility = View.VISIBLE
-                fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                setFabAlignmentModeAndReplaceMenu(
+                    BottomAppBar.FAB_ALIGNMENT_MODE_END,
+                    R.menu.detail_menu
+                )
+                navigationIcon = null
+                setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.delete -> {
+                            viewModel.deleteCollection()
+                            true
+                        }
+                        else -> false
+                    }
+                }
             }
             findViewById<FloatingActionButton>(R.id.fab)?.run {
                 setImageResource(R.drawable.ic_baseline_edit_24)
