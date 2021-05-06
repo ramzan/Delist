@@ -9,6 +9,7 @@
     <string name="type_queue">Queue</string>
     <string name="type_stack">Stack</string>
     <string name="type_randomizer">Randomizer</string>
+    <string name="empty_collection_message">No items</string>
 
     <string-array name="collection_type_array">
         <item>@string/type_queue</item>

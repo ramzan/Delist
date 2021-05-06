@@ -42,6 +42,23 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
     ): View {
         mutableBinding = FragmentCollectionDetailBinding.inflate(inflater)
 
+        val adapter = CompletedItemAdapter()
+
+        binding.completedItemList.adapter = adapter
+
+        binding.createItemButton.setOnClickListener {
+            viewModel.addItem(binding.newItemInput.text.toString())
+            binding.newItemInput.text = null
+        }
+
+        binding.completeItemButton.setOnClickListener {
+            viewModel.completeItem()
+        }
+
+        binding.clearCompletedButton.setOnClickListener {
+            viewModel.clearCompleted()
+        }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 when (state) {
@@ -50,6 +67,9 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                         false
                     )
                     is DetailState.Loaded -> {
+                        binding.currentTask.text =
+                            state.collection.item ?: getString(R.string.empty_collection_message)
+                        adapter.submitList(state.completedItems)
                     }
                     DetailState.Loading -> {
                     }

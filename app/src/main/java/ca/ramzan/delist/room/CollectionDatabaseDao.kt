@@ -18,22 +18,33 @@ interface CollectionDatabaseDao {
         SELECT collection_table.id, name, color, content AS item
         FROM collection_table
         LEFT JOIN item_table
-        ON collection_table.id = item_table.collectionId
+        ON collection_table.currentItemId = item_table.id
         ORDER BY name COLLATE NOCASE ASC
     """
     )
     fun getCollectionDisplays(): Flow<List<CollectionDisplayData>>
 
+    @Query(
+        """
+        SELECT collection_table.id, name, color, content AS item
+        FROM collection_table
+        LEFT JOIN item_table
+        ON collection_table.currentItemId = item_table.id
+        WHERE collection_table.id = :collectionId
+    """
+    )
+    fun getCollectionDisplay(collectionId: Long): Flow<CollectionDisplayData?>
+
     @Transaction
     fun completeTask(collectionId: Long) {
         val collection = getCollection(collectionId)
         val oldItem = getItem(collection.currentItemId ?: return)
+        updateItem(oldItem.copy(completed = true))
         val newItemId = when (collection.type) {
             CollectionType.STACK -> getTopOfStack(collection.id)
             CollectionType.QUEUE -> getFrontOfQueue(collection.id)
             CollectionType.RANDOMIZER -> getRandomItem(collection.id)
         }
-        updateItem(oldItem.copy(completed = true))
         updateCollection(collection.copy(currentItemId = newItemId))
     }
 
@@ -87,7 +98,7 @@ interface CollectionDatabaseDao {
             AND completed
     """
     )
-    fun getCompleteItems(collectionId: Long): List<CompletedItemDisplay>
+    fun getCompletedItems(collectionId: Long): List<CompletedItemDisplay>
 
 
     fun getRandomItem(collectionId: Long): Long? {
@@ -106,7 +117,16 @@ interface CollectionDatabaseDao {
 
     // region detail--------------------------------------------------------------------------------
     @Insert
-    fun createItem(item: Item)
+    fun createItem(item: Item): Long
+
+    @Transaction
+    fun addItem(item: Item) {
+        val itemId = createItem(item)
+        val collection = getCollection(item.collectionId)
+        if (collection.currentItemId == null || collection.type == CollectionType.STACK) {
+            updateCollection(collection.copy(currentItemId = itemId))
+        }
+    }
 
     @Query("DELETE FROM item_table WHERE item_table.collectionId = :collectionId AND completed")
     fun deleteCompletedItems(collectionId: Long)

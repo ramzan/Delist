@@ -22,7 +22,7 @@ data class Item(
 
     val completed: Boolean = false,
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 )
 
