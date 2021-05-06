@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import ca.ramzan.delist.R
 import ca.ramzan.delist.common.safeNavigate
 import ca.ramzan.delist.common.typeToColor
@@ -34,9 +35,13 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
         requireActivity().window.statusBarColor = resources.getColor(R.color.primary, null)
 
-        val adapter = CollectionAdapter(object : CollectionAdapter.OnClickListener {
-
-        })
+        val adapter = CollectionAdapter { collectionId ->
+            findNavController().safeNavigate(
+                CollectionListFragmentDirections.actionCollectionListFragmentToCollectionDetailFragment(
+                    collectionId
+                )
+            )
+        }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.collections.collect { list ->
@@ -58,7 +63,10 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
     private fun setUpBottomBar() {
         requireActivity().run {
-            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.visibility = View.VISIBLE
+            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.run {
+                visibility = View.VISIBLE
+                fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+            }
             findViewById<FloatingActionButton>(R.id.fab)?.run {
                 setImageResource(R.drawable.ic_baseline_add_24)
                 setOnClickListener {

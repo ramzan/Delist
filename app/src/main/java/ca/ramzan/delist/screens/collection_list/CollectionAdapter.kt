@@ -9,17 +9,17 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.delist.databinding.ListItemCollectionBinding
 
-class CollectionAdapter(private val onClickListener: OnClickListener) :
+class CollectionAdapter(private val onClickListener: (Long) -> Unit) :
     ListAdapter<CollectionDisplay, CollectionAdapter.ListItemCollectionViewHolder>(
         CollectionDiffCallback()
     ) {
 
-    interface OnClickListener
+//    interface OnClickListener
 
     class ListItemCollectionViewHolder(private val binding: ListItemCollectionBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CollectionDisplay, onClickListener: OnClickListener) {
+        fun bind(item: CollectionDisplay) {
             binding.collectionName.text = item.name
             binding.itemText.text = item.item
             binding.completeItemButton.setOnClickListener {
@@ -42,7 +42,10 @@ class CollectionAdapter(private val onClickListener: OnClickListener) :
 
     override fun onBindViewHolder(holder: ListItemCollectionViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, onClickListener)
+        holder.bind(item)
+        holder.itemView.setOnClickListener {
+            onClickListener(item.id)
+        }
     }
 
     override fun onCreateViewHolder(
