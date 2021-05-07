@@ -98,7 +98,7 @@ interface CollectionDatabaseDao {
             AND completed
     """
     )
-    fun getCompletedItems(collectionId: Long): List<CompletedItemDisplay>
+    fun getCompletedItems(collectionId: Long): Flow<List<CompletedItemDisplay>>
 
 
     fun getRandomItem(collectionId: Long): Long? {

@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 
@@ -26,20 +27,13 @@ class CollectionDetailViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                dao.getCollectionDisplay(collectionId).collect { collectionData ->
-                    if (collectionData == null) state.emit(DetailState.Deleted)
-                    else {
-                        state.emit(
-                            DetailState.Loaded(
-                                collectionData,
-                                dao.getCompletedItems(collectionId)
-                            )
-                        )
-                    }
+            dao.getCollectionDisplay(collectionId)
+                .combine(dao.getCompletedItems(collectionId)) { collectionData, completedItems ->
+                    if (collectionData == null) DetailState.Deleted
+                    else DetailState.Loaded(collectionData, completedItems)
+                }.collect {
+                    state.emit(it)
                 }
-
-            }
         }
     }
 

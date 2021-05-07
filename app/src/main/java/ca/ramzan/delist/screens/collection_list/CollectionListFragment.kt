@@ -72,6 +72,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 )
                 navigationIcon =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_menu_24)
+                setOnMenuItemClickListener(null)
             }
             findViewById<FloatingActionButton>(R.id.fab)?.run {
                 setImageResource(R.drawable.ic_baseline_add_24)
