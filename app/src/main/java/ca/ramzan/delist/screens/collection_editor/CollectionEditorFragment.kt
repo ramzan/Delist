@@ -57,7 +57,7 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
 
         binding.apply {
             editorToolbar.setNavigationOnClickListener {
-                findNavController().popBackStack(R.id.collectionListFragment, false)
+                findNavController().popBackStack()
             }
 
             editorToolbar.title = getString(

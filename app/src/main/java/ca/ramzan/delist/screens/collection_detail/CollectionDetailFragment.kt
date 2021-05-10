@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import ca.ramzan.delist.R
 import ca.ramzan.delist.common.safeNavigate
+import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionDetailBinding
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -67,6 +68,22 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                         false
                     )
                     is DetailState.Loaded -> {
+                        binding.detailToolbar.apply {
+                            title = state.collection.name
+                            typeToColor(resources, state.collection.color).let { color ->
+                                setBackgroundColor(color)
+                                requireActivity().window.statusBarColor = color
+                            }
+                            setNavigationOnClickListener {
+                                findNavController().popBackStack(R.id.collectionListFragment, false)
+                            }
+                        }
+                        binding.root.setBackgroundColor(
+                            typeToColor(
+                                resources,
+                                state.collection.color
+                            )
+                        )
                         binding.currentTask.text =
                             state.collection.item ?: getString(R.string.empty_collection_message)
                         adapter.submitList(state.completedItems)
