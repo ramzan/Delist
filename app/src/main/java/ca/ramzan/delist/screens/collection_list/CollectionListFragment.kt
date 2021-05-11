@@ -36,13 +36,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
         requireActivity().window.statusBarColor = resources.getColor(R.color.primary, null)
 
-        val adapter = CollectionAdapter { collectionId ->
-            findNavController().safeNavigate(
-                CollectionListFragmentDirections.actionCollectionListFragmentToCollectionDetailFragment(
-                    collectionId
-                )
-            )
-        }
+        val adapter = CollectionAdapter(::goToCollection, ::completeTask)
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.collections.collect { list ->
@@ -60,6 +54,18 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         binding.collectionList.adapter = adapter
 
         return binding.root
+    }
+
+    private fun goToCollection(collectionId: Long) {
+        findNavController().safeNavigate(
+            CollectionListFragmentDirections.actionCollectionListFragmentToCollectionDetailFragment(
+                collectionId
+            )
+        )
+    }
+
+    private fun completeTask(collectionId: Long) {
+        viewModel.completeTask(collectionId)
     }
 
     private fun setUpBottomBar() {

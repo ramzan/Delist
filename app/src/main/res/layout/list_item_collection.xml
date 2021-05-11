@@ -11,36 +11,41 @@
     android:padding="12dp">
 
     <TextView
-        android:id="@+id/item_text"
-        style="@style/TextAppearance.MaterialComponents.Headline6"
-        android:layout_width="wrap_content"
+        android:id="@+id/collection_name"
+        style="@style/TextAppearance.MaterialComponents.Overline"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/complete_item_button"
+        android:layout_marginHorizontal="@dimen/defaultPadding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Current item text" />
-
-    <TextView
-        android:id="@+id/collection_name"
-        style="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/complete_item_button"
-        app:layout_constraintEnd_toStartOf="@id/complete_item_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/complete_item_button"
         tools:text="Collection name" />
 
-    <Button
+    <TextView
+        android:id="@+id/item_text"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/complete_item_button"
+        app:layout_constraintStart_toStartOf="@id/collection_name"
+        app:layout_constraintTop_toBottomOf="@id/collection_name"
+        tools:text="Current item text Current item text Current item text Current item text Current item text Current item text Current item text " />
+
+    <ImageButton
         android:id="@+id/complete_item_button"
-        style="@style/TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Done"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="@dimen/defaultPadding"
+        android:background="?android:attr/actionBarItemBackground"
+        android:contentDescription="Done"
+
+        android:src="@drawable/ic_baseline_check_24"
+        app:layout_constraintBottom_toBottomOf="@id/item_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/collection_name"
-        app:layout_constraintTop_toBottomOf="@id/item_text" />
+        app:layout_constraintStart_toEndOf="@id/item_text"
+        app:layout_constraintTop_toTopOf="@id/item_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

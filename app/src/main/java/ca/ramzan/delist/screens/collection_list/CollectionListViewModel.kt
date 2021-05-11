@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import ca.ramzan.delist.room.CollectionDatabaseDao
 import ca.ramzan.delist.room.CollectionDisplayData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CollectionListViewModel @Inject constructor(dao: CollectionDatabaseDao) : ViewModel() {
+class CollectionListViewModel @Inject constructor(private val dao: CollectionDatabaseDao) :
+    ViewModel() {
 
     val collections = MutableStateFlow<List<CollectionDisplayData>>(emptyList())
 
@@ -20,6 +23,12 @@ class CollectionListViewModel @Inject constructor(dao: CollectionDatabaseDao) : 
             dao.getCollectionDisplays().collect {
                 collections.emit(it)
             }
+        }
+    }
+
+    fun completeTask(collectionId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.completeTask(collectionId)
         }
     }
 }

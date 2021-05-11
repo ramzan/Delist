@@ -9,27 +9,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.delist.databinding.ListItemCollectionBinding
 
-class CollectionAdapter(private val onClickListener: (Long) -> Unit) :
+class CollectionAdapter(
+    private val onCollectionTap: (Long) -> Unit,
+    private val onCompleteTask: (Long) -> Unit
+) :
     ListAdapter<CollectionDisplay, CollectionAdapter.ListItemCollectionViewHolder>(
         CollectionDiffCallback()
     ) {
 
-//    interface OnClickListener
-
-    class ListItemCollectionViewHolder(private val binding: ListItemCollectionBinding) :
+    class ListItemCollectionViewHolder(val binding: ListItemCollectionBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: CollectionDisplay) {
-            binding.collectionName.text = item.name
-            binding.itemText.text = item.item
-            binding.completeItemButton.setOnClickListener {
-            }
-            binding.root.background.colorFilter =
-                BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
-                    item.color,
-                    BlendModeCompat.SRC_ATOP
-                )
-        }
 
         companion object {
             fun from(parent: ViewGroup): ListItemCollectionViewHolder {
@@ -42,9 +31,20 @@ class CollectionAdapter(private val onClickListener: (Long) -> Unit) :
 
     override fun onBindViewHolder(holder: ListItemCollectionViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
-        holder.itemView.setOnClickListener {
-            onClickListener(item.id)
+        holder.binding.run {
+            collectionName.text = item.name
+            itemText.text = item.item
+            root.background.colorFilter =
+                BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                    item.color,
+                    BlendModeCompat.SRC_ATOP
+                )
+            root.setOnClickListener {
+                onCollectionTap(item.id)
+            }
+            completeItemButton.setOnClickListener {
+                onCompleteTask(item.id)
+            }
         }
     }
 
