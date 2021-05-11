@@ -77,6 +77,22 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             setNavigationOnClickListener {
                                 findNavController().popBackStack(R.id.collectionListFragment, false)
                             }
+                            setOnMenuItemClickListener { menuItem ->
+                                when (menuItem.itemId) {
+                                    R.id.delete -> {
+                                        viewModel.deleteCollection()
+                                        true
+                                    }
+                                    R.id.edit -> {
+                                        findNavController().safeNavigate(
+                                            CollectionDetailFragmentDirections.actionCollectionDetailFragmentToCollectionEditorFragment()
+                                                .setCollectionId(requireArguments().getLong("collectionId"))
+                                        )
+                                        true
+                                    }
+                                    else -> false
+                                }
+                            }
                         }
                         binding.root.setBackgroundColor(
                             typeToColor(
@@ -99,33 +115,8 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
 
     private fun setUpBottomBar() {
         requireActivity().run {
-            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.run {
-                visibility = View.VISIBLE
-                setFabAlignmentModeAndReplaceMenu(
-                    BottomAppBar.FAB_ALIGNMENT_MODE_END,
-                    R.menu.detail_menu
-                )
-                navigationIcon = null
-                setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.delete -> {
-                            viewModel.deleteCollection()
-                            true
-                        }
-                        else -> false
-                    }
-                }
-            }
-            findViewById<FloatingActionButton>(R.id.fab)?.run {
-                setImageResource(R.drawable.ic_baseline_edit_24)
-                setOnClickListener {
-                    findNavController(R.id.nav_host_fragment).safeNavigate(
-                        CollectionDetailFragmentDirections.actionCollectionDetailFragmentToCollectionEditorFragment()
-                            .setCollectionId(requireArguments().getLong("collectionId"))
-                    )
-                }
-                show()
-            }
+            findViewById<FloatingActionButton>(R.id.fab)?.hide()
+            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.visibility = View.INVISIBLE
         }
     }
 }
