@@ -45,7 +45,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                         it.id,
                         it.name,
                         typeToColor(resources, it.color),
-                        it.item
+                        it.task
                     )
                 })
             }

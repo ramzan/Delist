@@ -43,17 +43,17 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
     ): View {
         mutableBinding = FragmentCollectionDetailBinding.inflate(inflater)
 
-        val adapter = CompletedItemAdapter()
+        val adapter = CompletedTaskAdapter()
 
-        binding.completedItemList.adapter = adapter
+        binding.completedTaskList.adapter = adapter
 
-        binding.createItemButton.setOnClickListener {
-            viewModel.addItem(binding.newItemInput.text.toString())
-            binding.newItemInput.text = null
+        binding.createTaskButton.setOnClickListener {
+            viewModel.addTask(binding.newTaskInput.text.toString())
+            binding.newTaskInput.text = null
         }
 
-        binding.completeItemButton.setOnClickListener {
-            viewModel.completeItem()
+        binding.completeTaskButton.setOnClickListener {
+            viewModel.completeTask()
         }
 
         binding.clearCompletedButton.setOnClickListener {
@@ -101,8 +101,8 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             )
                         )
                         binding.currentTask.text =
-                            state.collection.item ?: getString(R.string.empty_collection_message)
-                        adapter.submitList(state.completedItems)
+                            state.collection.task ?: getString(R.string.empty_collection_message)
+                        adapter.submitList(state.completedTasks)
                     }
                     DetailState.Loading -> {
                     }

@@ -8,17 +8,17 @@ interface CollectionDatabaseDao {
 
     // region list----------------------------------------------------------------------------------
     @Update
-    fun updateItem(item: Item)
+    fun updateTask(task: Task)
 
-    @Query("SELECT * FROM item_table WHERE item_table.id = :id")
-    fun getItem(id: Long): Item
+    @Query("SELECT * FROM task_table WHERE task_table.id = :id")
+    fun getTask(id: Long): Task
 
     @Query(
         """
-        SELECT collection_table.id, name, color, content AS item
+        SELECT collection_table.id, name, color, content AS task
         FROM collection_table
-        LEFT JOIN item_table
-        ON collection_table.currentItemId = item_table.id
+        LEFT JOIN task_table
+        ON collection_table.currentTaskId = task_table.id
         ORDER BY name COLLATE NOCASE ASC
     """
     )
@@ -26,10 +26,10 @@ interface CollectionDatabaseDao {
 
     @Query(
         """
-        SELECT collection_table.id, name, color, content AS item
+        SELECT collection_table.id, name, color, content AS task
         FROM collection_table
-        LEFT JOIN item_table
-        ON collection_table.currentItemId = item_table.id
+        LEFT JOIN task_table
+        ON collection_table.currentTaskId = task_table.id
         WHERE collection_table.id = :collectionId
     """
     )
@@ -38,14 +38,14 @@ interface CollectionDatabaseDao {
     @Transaction
     fun completeTask(collectionId: Long) {
         val collection = getCollection(collectionId)
-        val oldItem = getItem(collection.currentItemId ?: return)
-        updateItem(oldItem.copy(completed = true))
-        val newItemId = when (collection.type) {
+        val oldTask = getTask(collection.currentTaskId ?: return)
+        updateTask(oldTask.copy(completed = true))
+        val newTaskId = when (collection.type) {
             CollectionType.STACK -> getTopOfStack(collection.id)
             CollectionType.QUEUE -> getFrontOfQueue(collection.id)
-            CollectionType.RANDOMIZER -> getRandomItem(collection.id)
+            CollectionType.RANDOMIZER -> getRandomTask(collection.id)
         }
-        updateCollection(collection.copy(currentItemId = newItemId))
+        updateCollection(collection.copy(currentTaskId = newTaskId))
     }
 
     @Insert
@@ -63,8 +63,8 @@ interface CollectionDatabaseDao {
     @Query(
         """
             SELECT MIN(id)
-            FROM item_table 
-            WHERE item_table.collectionId = :collectionId
+            FROM task_table 
+            WHERE task_table.collectionId = :collectionId
             AND NOT completed
         """
     )
@@ -73,8 +73,8 @@ interface CollectionDatabaseDao {
     @Query(
         """
             SELECT MAX(id)
-            FROM item_table 
-            WHERE item_table.collectionId = :collectionId
+            FROM task_table 
+            WHERE task_table.collectionId = :collectionId
             AND NOT completed
         """
     )
@@ -83,52 +83,52 @@ interface CollectionDatabaseDao {
     @Query(
         """
             SELECT id 
-            FROM item_table
-            WHERE item_table.collectionId = :collectionId
+            FROM task_table
+            WHERE task_table.collectionId = :collectionId
             AND NOT completed
     """
     )
-    fun getIncompleteItems(collectionId: Long): List<Long>
+    fun getIncompleteTasks(collectionId: Long): List<Long>
 
     @Query(
         """
             SELECT id, content
-            FROM item_table
-            WHERE item_table.collectionId = :collectionId
+            FROM task_table
+            WHERE task_table.collectionId = :collectionId
             AND completed
     """
     )
-    fun getCompletedItems(collectionId: Long): Flow<List<CompletedItemDisplay>>
+    fun getCompletedTasks(collectionId: Long): Flow<List<CompletedTaskDisplay>>
 
 
-    fun getRandomItem(collectionId: Long): Long? {
-        return getIncompleteItems(collectionId).randomOrNull()
+    fun getRandomTask(collectionId: Long): Long? {
+        return getIncompleteTasks(collectionId).randomOrNull()
     }
 
     fun changeCollectionType(collection: Collection, newType: CollectionType) {
-        val newItemId = when (newType) {
+        val newTaskId = when (newType) {
             CollectionType.STACK -> getTopOfStack(collection.id)
             CollectionType.QUEUE -> getFrontOfQueue(collection.id)
-            CollectionType.RANDOMIZER -> getRandomItem(collection.id)
+            CollectionType.RANDOMIZER -> getRandomTask(collection.id)
         }
-        updateCollection(collection.copy(type = newType, currentItemId = newItemId))
+        updateCollection(collection.copy(type = newType, currentTaskId = newTaskId))
     }
     // endregion list-------------------------------------------------------------------------------
 
     // region detail--------------------------------------------------------------------------------
     @Insert
-    fun createItem(item: Item): Long
+    fun createTask(task: Task): Long
 
     @Transaction
-    fun addItem(item: Item) {
-        val itemId = createItem(item)
-        val collection = getCollection(item.collectionId)
-        if (collection.currentItemId == null || collection.type == CollectionType.STACK) {
-            updateCollection(collection.copy(currentItemId = itemId))
+    fun addTask(task: Task) {
+        val taskId = createTask(task)
+        val collection = getCollection(task.collectionId)
+        if (collection.currentTaskId == null || collection.type == CollectionType.STACK) {
+            updateCollection(collection.copy(currentTaskId = taskId))
         }
     }
 
-    @Query("DELETE FROM item_table WHERE item_table.collectionId = :collectionId AND completed")
-    fun deleteCompletedItems(collectionId: Long)
+    @Query("DELETE FROM task_table WHERE task_table.collectionId = :collectionId AND completed")
+    fun deleteCompletedTasks(collectionId: Long)
     // endregion detail-----------------------------------------------------------------------------
 }

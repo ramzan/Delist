@@ -42,7 +42,7 @@ class CollectionAdapter(
             root.setOnClickListener {
                 onCollectionTap(item.id)
             }
-            completeItemButton.setOnClickListener {
+            completeTaskButton.setOnClickListener {
                 onCompleteTask(item.id)
             }
         }

@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "item_table",
+    tableName = "task_table",
     foreignKeys = [ForeignKey(
         entity = Collection::class,
         parentColumns = ["id"],
@@ -14,7 +14,7 @@ import androidx.room.PrimaryKey
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class Item(
+data class Task(
     @ColumnInfo(index = true)
     val collectionId: Long,
 
@@ -26,7 +26,7 @@ data class Item(
     val id: Long = 0,
 )
 
-class CompletedItemDisplay(
+class CompletedTaskDisplay(
     val id: Long,
     val content: String
 )

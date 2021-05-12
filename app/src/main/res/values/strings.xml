@@ -2,14 +2,13 @@
     <string name="app_name">Delist</string>
     <string name="name_input_hint">Name</string>
     <string name="new_collection_button_description">New collection button</string>
-    <string name="nameInputHint">Name</string>
     <string name="type">Type</string>
     <string name="create_collection">Create collection</string>
     <string name="edit_collection">Edit collection</string>
     <string name="type_queue">Queue</string>
     <string name="type_stack">Stack</string>
     <string name="type_randomizer">Randomizer</string>
-    <string name="empty_collection_message">No items</string>
+    <string name="empty_collection_message">No tasks</string>
 
     <string-array name="collection_type_array">
         <item>@string/type_queue</item>

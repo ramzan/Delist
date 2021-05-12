@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import ca.ramzan.delist.room.CollectionDatabaseDao
 import ca.ramzan.delist.room.CollectionDisplayData
-import ca.ramzan.delist.room.CompletedItemDisplay
-import ca.ramzan.delist.room.Item
+import ca.ramzan.delist.room.CompletedTaskDisplay
+import ca.ramzan.delist.room.Task
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -28,9 +28,9 @@ class CollectionDetailViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             dao.getCollectionDisplay(collectionId)
-                .combine(dao.getCompletedItems(collectionId)) { collectionData, completedItems ->
+                .combine(dao.getCompletedTasks(collectionId)) { collectionData, completedTasks ->
                     if (collectionData == null) DetailState.Deleted
-                    else DetailState.Loaded(collectionData, completedItems)
+                    else DetailState.Loaded(collectionData, completedTasks)
                 }.collect {
                     state.emit(it)
                 }
@@ -45,13 +45,13 @@ class CollectionDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun addItem(item: String) {
+    fun addTask(task: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            dao.addItem(Item(collectionId, item))
+            dao.addTask(Task(collectionId, task))
         }
     }
 
-    fun completeItem() {
+    fun completeTask() {
         CoroutineScope(Dispatchers.IO).launch {
             dao.completeTask(collectionId)
         }
@@ -59,7 +59,7 @@ class CollectionDetailViewModel @AssistedInject constructor(
 
     fun clearCompleted() {
         CoroutineScope(Dispatchers.IO).launch {
-            dao.deleteCompletedItems(collectionId)
+            dao.deleteCompletedTasks(collectionId)
         }
     }
 
@@ -91,6 +91,6 @@ sealed class DetailState {
     object Deleted : DetailState()
     data class Loaded(
         val collection: CollectionDisplayData,
-        val completedItems: List<CompletedItemDisplay>
+        val completedTasks: List<CompletedTaskDisplay>
     ) : DetailState()
 }

@@ -7,19 +7,19 @@ enum class CollectionType {
     QUEUE, STACK, RANDOMIZER
 }
 
-enum class CollectionColor(s: String) {
-    PLAIN("PLAIN"),
-    RED("RED"),
-    ORANGE("ORANGE"),
-    YELLOW("YELLOW"),
-    GREEN("GREEN"),
-    TEAL("TEAL"),
-    BLUE("BLUE"),
-    DARK_BLUE("DARK_BLUE"),
-    PURPLE("PURPLE"),
-    PINK("PINK"),
-    BROWN("BROWN"),
-    GREY("GREY"),
+enum class CollectionColor {
+    PLAIN,
+    RED,
+    ORANGE,
+    YELLOW,
+    GREEN,
+    TEAL,
+    BLUE,
+    DARK_BLUE,
+    PURPLE,
+    PINK,
+    BROWN,
+    GREY,
 }
 
 @Entity(tableName = "collection_table")
@@ -30,7 +30,7 @@ data class Collection(
 
     val color: CollectionColor,
 
-    val currentItemId: Long?,
+    val currentTaskId: Long?,
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -40,5 +40,5 @@ class CollectionDisplayData(
     val id: Long,
     val name: String,
     val color: CollectionColor,
-    val item: String?
+    val task: String?
 )

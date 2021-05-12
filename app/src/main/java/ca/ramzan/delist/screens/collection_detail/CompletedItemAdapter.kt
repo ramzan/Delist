@@ -5,31 +5,31 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ca.ramzan.delist.databinding.ListItemCompletedItemBinding
-import ca.ramzan.delist.room.CompletedItemDisplay
+import ca.ramzan.delist.databinding.ListItemCompletedTaskBinding
+import ca.ramzan.delist.room.CompletedTaskDisplay
 
-class CompletedItemAdapter :
-    ListAdapter<CompletedItemDisplay, CompletedItemAdapter.ListItemCompletedItemViewHolder>(
-        CompletedItemDiffCallback()
+class CompletedTaskAdapter :
+    ListAdapter<CompletedTaskDisplay, CompletedTaskAdapter.ListItemCompletedTaskViewHolder>(
+        CompletedTaskDiffCallback()
     ) {
 
-    class ListItemCompletedItemViewHolder(private val binding: ListItemCompletedItemBinding) :
+    class ListItemCompletedTaskViewHolder(private val binding: ListItemCompletedTaskBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CompletedItemDisplay) {
-            binding.completedItemText.text = item.content
+        fun bind(item: CompletedTaskDisplay) {
+            binding.completedTaskText.text = item.content
         }
 
         companion object {
-            fun from(parent: ViewGroup): ListItemCompletedItemViewHolder {
+            fun from(parent: ViewGroup): ListItemCompletedTaskViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemCompletedItemBinding.inflate(layoutInflater, parent, false)
-                return ListItemCompletedItemViewHolder(binding)
+                val binding = ListItemCompletedTaskBinding.inflate(layoutInflater, parent, false)
+                return ListItemCompletedTaskViewHolder(binding)
             }
         }
     }
 
-    override fun onBindViewHolder(holder: ListItemCompletedItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ListItemCompletedTaskViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
     }
@@ -37,22 +37,22 @@ class CompletedItemAdapter :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ListItemCompletedItemViewHolder {
-        return ListItemCompletedItemViewHolder.from(parent)
+    ): ListItemCompletedTaskViewHolder {
+        return ListItemCompletedTaskViewHolder.from(parent)
     }
 }
 
-class CompletedItemDiffCallback : DiffUtil.ItemCallback<CompletedItemDisplay>() {
+class CompletedTaskDiffCallback : DiffUtil.ItemCallback<CompletedTaskDisplay>() {
     override fun areItemsTheSame(
-        oldItem: CompletedItemDisplay,
-        newItem: CompletedItemDisplay
+        oldItem: CompletedTaskDisplay,
+        newItem: CompletedTaskDisplay
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: CompletedItemDisplay,
-        newItem: CompletedItemDisplay
+        oldItem: CompletedTaskDisplay,
+        newItem: CompletedTaskDisplay
     ): Boolean {
         return oldItem.content == newItem.content
     }

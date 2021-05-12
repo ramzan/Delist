@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         Collection::class,
-        Item::class,
+        Task::class,
     ],
     version = 1,
     exportSchema = false
@@ -28,7 +28,7 @@ abstract class CollectionDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         CollectionDatabase::class.java,
-                        "exercise_database"
+                        "collection_database"
                     )
                         .fallbackToDestructiveMigration()
                         .build()

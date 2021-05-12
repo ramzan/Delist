@@ -46,7 +46,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/defaultPadding"
-                android:hint="@string/nameInputHint"
+                android:hint="@string/name_input_hint"
                 android:paddingVertical="@dimen/defaultPadding"
                 app:colorControlActivated="@color/primary_inverse"
                 app:hintTextColor="@color/primary_inverse"
