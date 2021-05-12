@@ -48,7 +48,7 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         binding.completedTaskList.adapter = adapter
 
         binding.createTaskButton.setOnClickListener {
-            viewModel.addTask(binding.newTaskInput.text.toString())
+            viewModel.addTasks(binding.newTaskInput.text.toString())
             binding.newTaskInput.text = null
         }
 

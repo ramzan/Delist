@@ -105,6 +105,10 @@ interface CollectionDatabaseDao {
         return getIncompleteTasks(collectionId).randomOrNull()
     }
 
+    // endregion list-------------------------------------------------------------------------------
+
+    // region editor--------------------------------------------------------------------------------
+
     fun changeCollectionType(collection: Collection, newType: CollectionType) {
         val newTaskId = when (newType) {
             CollectionType.STACK -> getTopOfStack(collection.id)
@@ -113,18 +117,26 @@ interface CollectionDatabaseDao {
         }
         updateCollection(collection.copy(type = newType, currentTaskId = newTaskId))
     }
-    // endregion list-------------------------------------------------------------------------------
+
+    // endregion editor-----------------------------------------------------------------------------
 
     // region detail--------------------------------------------------------------------------------
     @Insert
-    fun createTask(task: Task): Long
+    fun createTasks(tasks: List<Task>): List<Long>
 
     @Transaction
-    fun addTask(task: Task) {
-        val taskId = createTask(task)
-        val collection = getCollection(task.collectionId)
-        if (collection.currentTaskId == null || collection.type == CollectionType.STACK) {
-            updateCollection(collection.copy(currentTaskId = taskId))
+    fun addTasks(tasks: List<Task>) {
+        if (tasks.isEmpty()) return
+        val taskIds = createTasks(tasks)
+        val collection = getCollection(tasks.first().collectionId)
+        if (collection.type == CollectionType.STACK) {
+            updateCollection(collection.copy(currentTaskId = taskIds.last()))
+        } else if (collection.currentTaskId == null) {
+            if (collection.type == CollectionType.RANDOMIZER) {
+                updateCollection(collection.copy(currentTaskId = taskIds.random()))
+            } else {
+                updateCollection(collection.copy(currentTaskId = taskIds.first()))
+            }
         }
     }
 

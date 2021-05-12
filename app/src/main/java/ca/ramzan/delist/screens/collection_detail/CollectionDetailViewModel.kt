@@ -45,9 +45,13 @@ class CollectionDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun addTask(task: String) {
+    fun addTasks(tasks: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            dao.addTask(Task(collectionId, task))
+            tasks.split("\n")
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .map { Task(collectionId, it) }
+                .run { dao.addTasks(this) }
         }
     }
 

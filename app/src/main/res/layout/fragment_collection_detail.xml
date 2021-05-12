@@ -26,41 +26,48 @@
 
     <TextView
         android:id="@+id/current_task"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/complete_task_button"
+        android:layout_marginVertical="8dp"
+        android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@id/complete_task_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/complete_task_button"
-        tools:text="Current task" />
+        app:layout_constraintTop_toBottomOf="@id/detail_toolbar_layout"
+        tools:text="Current item text Current item text Current item text Current item text Current item text Current item text Current item text " />
 
-    <Button
+    <ImageButton
         android:id="@+id/complete_task_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Complete"
+        android:layout_marginHorizontal="@dimen/defaultPadding"
+        android:background="?android:attr/actionBarItemBackground"
+        android:contentDescription="Done"
+
+        android:src="@drawable/ic_baseline_check_24"
+        app:layout_constraintBottom_toBottomOf="@id/current_task"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_toolbar_layout" />
+        app:layout_constraintTop_toTopOf="@id/current_task" />
 
     <EditText
         android:id="@+id/new_task_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Add task"
+        android:hint="Add tasks (one per line)"
         android:importantForAutofill="no"
-        android:inputType="text"
+        android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="@id/create_task_button"
         app:layout_constraintEnd_toStartOf="@id/create_task_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/create_task_button" />
+        app:layout_constraintTop_toBottomOf="@id/current_task" />
 
     <Button
         android:id="@+id/create_task_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/complete_task_button" />
+        app:layout_constraintBottom_toBottomOf="@id/new_task_input"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
     <TextView
