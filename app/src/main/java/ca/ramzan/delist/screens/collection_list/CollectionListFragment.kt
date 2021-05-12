@@ -36,7 +36,11 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
         requireActivity().window.statusBarColor = resources.getColor(R.color.primary, null)
 
-        val adapter = CollectionAdapter(::goToCollection, ::completeTask)
+        val adapter = CollectionAdapter(
+            ::goToCollection,
+            ::completeTask,
+            getString(R.string.empty_collection_message)
+        )
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.collections.collect { list ->

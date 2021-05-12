@@ -11,7 +11,8 @@ import ca.ramzan.delist.databinding.ListItemCollectionBinding
 
 class CollectionAdapter(
     private val onCollectionTap: (Long) -> Unit,
-    private val onCompleteTask: (Long) -> Unit
+    private val onCompleteTask: (Long) -> Unit,
+    private val noTasksMessage: String
 ) :
     ListAdapter<CollectionDisplay, CollectionAdapter.ListItemCollectionViewHolder>(
         CollectionDiffCallback()
@@ -33,7 +34,7 @@ class CollectionAdapter(
         val item = getItem(position)
         holder.binding.run {
             collectionName.text = item.name
-            itemText.text = item.item
+            itemText.text = item.item ?: noTasksMessage
             root.background.colorFilter =
                 BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
                     item.color,
