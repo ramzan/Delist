@@ -46,19 +46,14 @@ class CollectionEditorViewModel @AssistedInject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             (state.value as? EditorState.Loaded)?.run {
                 if (collectionId == 0L) dao.createCollection(
-                    Collection(
-                        collectionType,
-                        nameInputText,
-                        color,
-                        null
+                    Collection(collectionType, nameInputText, color, null)
+                ) else {
+                    val collection = oldCollection!!
+                    dao.updateCollection(
+                        collection.copy(type = collectionType, name = nameInputText, color = color),
+                        collection.type != collectionType
                     )
-                ) else dao.updateCollection(
-                    oldCollection!!.copy(
-                        type = collectionType,
-                        name = nameInputText,
-                        color = color
-                    )
-                )
+                }
             }
         }
     }

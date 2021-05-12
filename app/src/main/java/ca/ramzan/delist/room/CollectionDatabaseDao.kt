@@ -52,7 +52,7 @@ interface CollectionDatabaseDao {
     fun createCollection(collection: Collection)
 
     @Update
-    fun updateCollection(collection: Collection)
+    fun saveCollection(collection: Collection)
 
     @Delete
     fun deleteCollection(collection: Collection)
@@ -109,13 +109,16 @@ interface CollectionDatabaseDao {
 
     // region editor--------------------------------------------------------------------------------
 
-    fun changeCollectionType(collection: Collection, newType: CollectionType) {
-        val newTaskId = when (newType) {
-            CollectionType.STACK -> getTopOfStack(collection.id)
-            CollectionType.QUEUE -> getFrontOfQueue(collection.id)
-            CollectionType.RANDOMIZER -> getRandomTask(collection.id)
-        }
-        updateCollection(collection.copy(type = newType, currentTaskId = newTaskId))
+    @Transaction
+    fun updateCollection(collection: Collection, typeChanged: Boolean = false) {
+        if (typeChanged) {
+            val newTaskId = when (collection.type) {
+                CollectionType.STACK -> getTopOfStack(collection.id)
+                CollectionType.QUEUE -> getFrontOfQueue(collection.id)
+                CollectionType.RANDOMIZER -> getRandomTask(collection.id)
+            }
+            saveCollection(collection.copy(currentTaskId = newTaskId))
+        } else saveCollection(collection)
     }
 
     // endregion editor-----------------------------------------------------------------------------
