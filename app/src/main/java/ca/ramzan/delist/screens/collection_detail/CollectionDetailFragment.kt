@@ -53,6 +53,7 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         }
 
         binding.completeTaskButton.setOnClickListener {
+            it.isEnabled = false
             viewModel.completeTask()
         }
 
@@ -100,8 +101,13 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                                 state.collection.color
                             )
                         )
-                        binding.currentTask.text =
-                            state.collection.task ?: getString(R.string.empty_collection_message)
+                        if (state.collection.task != null) {
+                            binding.currentTask.text = state.collection.task
+                            binding.completeTaskButton.isEnabled = true
+                        } else {
+                            binding.currentTask.text = getString(R.string.empty_collection_message)
+                            binding.completeTaskButton.isEnabled = false
+                        }
                         adapter.submitList(state.completedTasks)
                     }
                     DetailState.Loading -> {

@@ -34,6 +34,13 @@ class CollectionAdapter(
         val item = getItem(position)
         holder.binding.run {
             collectionName.text = item.name
+            if (item.item == null) {
+                itemText.text = noTasksMessage
+                completeTaskButton.isEnabled = false
+            } else {
+                itemText.text = item.item
+                completeTaskButton.isEnabled = true
+            }
             itemText.text = item.item ?: noTasksMessage
             root.background.colorFilter =
                 BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
@@ -44,6 +51,7 @@ class CollectionAdapter(
                 onCollectionTap(item.id)
             }
             completeTaskButton.setOnClickListener {
+                it.isEnabled = false
                 onCompleteTask(item.id)
             }
         }

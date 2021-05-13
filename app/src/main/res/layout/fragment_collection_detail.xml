@@ -56,7 +56,7 @@
         android:hint="Add tasks (one per line)"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toBottomOf="@id/create_task_button"
+        app:layout_constraintBottom_toTopOf="@id/clear_completed_button"
         app:layout_constraintEnd_toStartOf="@id/create_task_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/current_task" />
@@ -67,7 +67,8 @@
         android:layout_height="wrap_content"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="@id/new_task_input"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/new_task_input" />
 
 
     <TextView
