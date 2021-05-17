@@ -43,20 +43,19 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
     ): View {
         mutableBinding = FragmentCollectionDetailBinding.inflate(inflater)
 
-        val adapter = CompletedTaskAdapter()
+        val adapter = CollectionDetailAdapter(object : CollectionDetailAdapter.OnClickListener {
+            override fun onCreateTask(tasks: String) {
+                viewModel.addTasks(tasks)
+                viewModel.overflow()
+
+            }
+
+            override fun onCompleteTask() {
+                viewModel.completeTask()
+            }
+        })
 
         binding.completedTaskList.adapter = adapter
-
-        binding.createTaskButton.setOnClickListener {
-//            viewModel.addTasks(binding.newTaskInput.text.toString())
-//            binding.newTaskInput.text = null
-            viewModel.overflow()
-        }
-
-        binding.completeTaskButton.setOnClickListener {
-            it.isEnabled = false
-            viewModel.completeTask()
-        }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
@@ -70,6 +69,7 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             title = state.collection.name
                             typeToColor(resources, state.collection.color).let { color ->
                                 setBackgroundColor(color)
+                                binding.root.setBackgroundColor(color)
                                 requireActivity().window.statusBarColor = color
                             }
                             setNavigationOnClickListener {
@@ -96,36 +96,27 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                                 }
                             }
                         }
-                        binding.root.setBackgroundColor(
-                            typeToColor(
-                                resources,
-                                state.collection.color
-                            )
-                        )
-                        if (state.collection.task != null) {
-                            binding.currentTask.text = state.collection.task
-                            binding.completeTaskButton.isEnabled = true
+
+                        if (state.completedTasks.isEmpty()) {
+                            adapter.submitNoCompleted(state.collection.task)
                         } else {
-                            binding.currentTask.text = getString(R.string.empty_collection_message)
-                            binding.completeTaskButton.isEnabled = false
+                            adapter.submitWithCompleted(state.collection.task, state.completedTasks)
                         }
 
-                        adapter.submitList(state.completedTasks)
-
-                        binding.completedTaskListHeader.text = resources.getQuantityString(
-                            R.plurals.n_completed_tasks,
-                            state.completedTasks.size,
-                            state.completedTasks.size
-                        )
-                        binding.completedTaskGroup.visibility =
-                            if (state.completedTasks.isEmpty()) View.GONE else View.VISIBLE
+//                        binding.completedTaskListHeader.text = resources.getQuantityString(
+//                            R.plurals.n_completed_tasks,
+//                            state.completedTasks.size,
+//                            state.completedTasks.size
+//                        )
+//                        binding.completedTaskGroup.visibility =
+//                            if (state.completedTasks.isEmpty()) View.GONE else View.VISIBLE
 
                         binding.detailProgressBar.visibility = View.GONE
-                        binding.detailLayout.visibility = View.VISIBLE
+                        binding.completedTaskList.visibility = View.VISIBLE
                     }
                     DetailState.Loading -> {
                         binding.detailProgressBar.visibility = View.VISIBLE
-                        binding.detailLayout.visibility = View.GONE
+                        binding.completedTaskList.visibility = View.GONE
                     }
                 }
             }
