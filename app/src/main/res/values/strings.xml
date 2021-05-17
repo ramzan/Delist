@@ -9,11 +9,17 @@
     <string name="type_stack">Stack</string>
     <string name="type_randomizer">Randomizer</string>
     <string name="empty_collection_message">No tasks</string>
+    <string name="bulleted_list_item">\u2022 %s</string>
 
     <string-array name="collection_type_array">
         <item>@string/type_queue</item>
         <item>@string/type_stack</item>
         <item>@string/type_randomizer</item>
     </string-array>
+
+    <plurals name="n_completed_tasks">
+        <item quantity="one">%d completed task</item>
+        <item quantity="other">%d completed tasks</item>
+    </plurals>
 
 </resources>

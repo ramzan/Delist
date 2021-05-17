@@ -2,6 +2,9 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/completed_task_text"
+    style="@style/TextAppearance.MaterialComponents.Subtitle1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:text="Completed item" />
+    android:padding="4dp"
+    android:textIsSelectable="true"
+    tools:text="• Completed item" />

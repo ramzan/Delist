@@ -47,11 +47,11 @@ class CollectionDetailViewModel @AssistedInject constructor(
 
     fun addTasks(tasks: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            tasks.split("\n")
+            dao.addTasks(tasks.split("\n")
                 .map { it.trim() }
                 .filter { it.isNotEmpty() }
                 .map { Task(collectionId, it) }
-                .run { dao.addTasks(this) }
+            )
         }
     }
 
@@ -64,6 +64,19 @@ class CollectionDetailViewModel @AssistedInject constructor(
     fun clearCompleted() {
         CoroutineScope(Dispatchers.IO).launch {
             dao.deleteCompletedTasks(collectionId)
+        }
+    }
+
+    fun overflow() {
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.addTasks((0 until 200).map {
+                Task(
+                    collectionId,
+                    it.toString(),
+                    completed = it % 2 == 0
+                )
+            }
+            )
         }
     }
 

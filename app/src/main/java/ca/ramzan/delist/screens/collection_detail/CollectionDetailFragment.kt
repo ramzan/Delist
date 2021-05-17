@@ -48,17 +48,14 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         binding.completedTaskList.adapter = adapter
 
         binding.createTaskButton.setOnClickListener {
-            viewModel.addTasks(binding.newTaskInput.text.toString())
-            binding.newTaskInput.text = null
+//            viewModel.addTasks(binding.newTaskInput.text.toString())
+//            binding.newTaskInput.text = null
+            viewModel.overflow()
         }
 
         binding.completeTaskButton.setOnClickListener {
             it.isEnabled = false
             viewModel.completeTask()
-        }
-
-        binding.clearCompletedButton.setOnClickListener {
-            viewModel.clearCompleted()
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -80,8 +77,12 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             }
                             setOnMenuItemClickListener { menuItem ->
                                 when (menuItem.itemId) {
-                                    R.id.delete -> {
+                                    R.id.delete_collection -> {
                                         viewModel.deleteCollection()
+                                        true
+                                    }
+                                    R.id.delete_completed -> {
+                                        viewModel.clearCompleted()
                                         true
                                     }
                                     R.id.edit -> {
@@ -108,9 +109,23 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             binding.currentTask.text = getString(R.string.empty_collection_message)
                             binding.completeTaskButton.isEnabled = false
                         }
+
                         adapter.submitList(state.completedTasks)
+
+                        binding.completedTaskListHeader.text = resources.getQuantityString(
+                            R.plurals.n_completed_tasks,
+                            state.completedTasks.size,
+                            state.completedTasks.size
+                        )
+                        binding.completedTaskGroup.visibility =
+                            if (state.completedTasks.isEmpty()) View.GONE else View.VISIBLE
+
+                        binding.detailProgressBar.visibility = View.GONE
+                        binding.detailLayout.visibility = View.VISIBLE
                     }
                     DetailState.Loading -> {
+                        binding.detailProgressBar.visibility = View.VISIBLE
+                        binding.detailLayout.visibility = View.GONE
                     }
                 }
             }

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ca.ramzan.delist.R
 import ca.ramzan.delist.databinding.ListItemCompletedTaskBinding
 import ca.ramzan.delist.room.CompletedTaskDisplay
 
@@ -17,7 +18,8 @@ class CompletedTaskAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CompletedTaskDisplay) {
-            binding.completedTaskText.text = item.content
+            binding.completedTaskText.text =
+                binding.root.context.getString(R.string.bulleted_list_item, item.content)
         }
 
         companion object {

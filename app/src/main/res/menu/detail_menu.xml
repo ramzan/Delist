@@ -10,10 +10,15 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/delete"
-        android:contentDescription="Delete"
-        android:icon="@drawable/ic_baseline_delete_24"
-        android:title="Delete"
+        android:id="@+id/delete_collection"
+        android:contentDescription="Delete collection"
+        android:title="Delete collection"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/delete_completed"
+        android:contentDescription="Delete completed"
+        android:title="Delete completed"
         app:showAsAction="never" />
 
 </menu>

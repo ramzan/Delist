@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,77 +24,122 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/current_task"
-        style="@style/TextAppearance.MaterialComponents.Headline6"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="8dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@id/complete_task_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_toolbar_layout"
-        tools:text="Current item text Current item text Current item text Current item text Current item text Current item text Current item text " />
-
-    <ImageButton
-        android:id="@+id/complete_task_button"
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/detail_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/defaultPadding"
-        android:background="?android:attr/actionBarItemBackground"
-        android:contentDescription="Done"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        app:indicatorColor="@color/primary_inverse"
+        tools:visibility="gone" />
 
-        android:src="@drawable/ic_baseline_check_24"
-        app:layout_constraintBottom_toBottomOf="@id/current_task"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/current_task" />
-
-    <EditText
-        android:id="@+id/new_task_input"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Add tasks (one per line)"
-        android:importantForAutofill="no"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@id/clear_completed_button"
-        app:layout_constraintEnd_toStartOf="@id/create_task_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/current_task" />
-
-    <Button
-        android:id="@+id/create_task_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        app:layout_constraintBottom_toBottomOf="@id/new_task_input"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/new_task_input" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Completed tasks"
-        app:layout_constraintBottom_toBottomOf="@id/clear_completed_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/clear_completed_button" />
-
-    <Button
-        android:id="@+id/clear_completed_button"
-        style="@style/TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Clear completed"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/new_task_input" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/completed_task_list"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/detail_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layoutManager="LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clear_completed_button"
-        tools:listitem="@layout/list_item_completed_task" />
+        android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/current_task"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/defaultPadding"
+                android:textAlignment="center"
+                android:textIsSelectable="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Current item text Current item text Current item text Current item text Current item text Current item text Current item text " />
+
+            <Button
+                android:id="@+id/complete_task_button"
+                style="@style/TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Done"
+                app:layout_constraintBottom_toBottomOf="@id/create_task_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/create_task_button"
+                app:layout_constraintTop_toTopOf="@id/create_task_button" />
+
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:id="@+id/new_task_input_layout"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="@dimen/defaultPadding"-->
+            <!--                android:hint="Add tasks (one per line)"-->
+            <!--                android:paddingVertical="@dimen/defaultPadding"-->
+            <!--                app:colorControlActivated="@color/primary_inverse"-->
+            <!--                app:hintTextColor="@color/primary_inverse"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent">-->
+
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/new_task_input"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:importantForAutofill="no"-->
+            <!--                    android:inputType="textMultiLine" />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+            <Button
+                android:id="@+id/create_task_button"
+                style="@style/TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add tasks"
+                app:layout_constraintEnd_toStartOf="@id/complete_task_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/current_task" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/defaultPadding"
+                android:layout_marginVertical="@dimen/defaultPadding"
+                android:background="@color/primary_inverse"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_task_button" />
+
+            <TextView
+                android:id="@+id/completed_task_list_header"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/defaultPadding"
+                android:layout_marginStart="@dimen/defaultPadding"
+                android:text="Completed tasks"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/completed_task_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingHorizontal="@dimen/defaultPadding"
+                app:layoutManager="LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/completed_task_list_header"
+                tools:listitem="@layout/list_item_completed_task" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/completed_task_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="divider,completed_task_list_header,completed_task_list" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
