@@ -21,9 +21,16 @@
         <item name="android:textColor">@color/primary_inverse</item>
     </style>
 
+    <!--Detail Fragment Buttons-->
     <style name="TextButton" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
         <item name="android:textColor">@color/primary_inverse</item>
         <item name="iconTint">@color/primary_inverse</item>
+    </style>
+
+    <!--Dialog buttons-->
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/primary_inverse</item>
+        <item name="android:textColor">@color/primary_inverse</item>
     </style>
 
     <!--Text input-->

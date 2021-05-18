@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/new_task_input_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Add tasks (one per line)"
+    android:padding="@dimen/defaultPadding"
+    app:colorControlActivated="@color/primary_inverse"
+    app:hintTextColor="@color/primary_inverse">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/new_task_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine" />
+</com.google.android.material.textfield.TextInputLayout>

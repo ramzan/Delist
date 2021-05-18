@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -35,6 +36,11 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
     override fun onStart() {
         super.onStart()
         setUpBottomBar()
+        setFragmentResultListener(TASK_INPUT_RESULT) { _, bundle ->
+            bundle.getString(TASK_INPUT_TEXT)?.let {
+                viewModel.addTasks(it)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -44,10 +50,8 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         mutableBinding = FragmentCollectionDetailBinding.inflate(inflater)
 
         val adapter = CollectionDetailAdapter(object : CollectionDetailAdapter.OnClickListener {
-            override fun onCreateTask(tasks: String) {
-                viewModel.addTasks(tasks)
-                viewModel.overflow()
-
+            override fun onCreateTask() {
+                showTaskInputDialog()
             }
 
             override fun onCompleteTask() {
@@ -123,6 +127,12 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         }
 
         return binding.root
+    }
+
+    private fun showTaskInputDialog() {
+        findNavController().safeNavigate(
+            CollectionDetailFragmentDirections.actionCollectionDetailFragmentToTaskInputDialogFragment()
+        )
     }
 
     private fun setUpBottomBar() {

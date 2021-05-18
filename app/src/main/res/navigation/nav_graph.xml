@@ -36,6 +36,9 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_collectionDetailFragment_to_taskInputDialogFragment"
+            app:destination="@id/taskInputDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/collectionEditorFragment"
@@ -54,4 +57,8 @@
         android:id="@+id/colorPickerDialogFragment"
         android:name="ca.ramzan.delist.screens.color_picker.ColorPickerDialogFragment"
         android:label="ColorPickerDialogFragment" />
+    <dialog
+        android:id="@+id/taskInputDialogFragment"
+        android:name="ca.ramzan.delist.screens.collection_detail.TaskInputDialogFragment"
+        android:label="TaskInputDialogFragment" />
 </navigation>

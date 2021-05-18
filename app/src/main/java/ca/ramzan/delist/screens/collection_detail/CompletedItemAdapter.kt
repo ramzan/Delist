@@ -22,7 +22,7 @@ class CollectionDetailAdapter(private val onClickListener: OnClickListener) :
     ) {
 
     interface OnClickListener {
-        fun onCreateTask(tasks: String)
+        fun onCreateTask()
         fun onCompleteTask()
     }
 
@@ -72,8 +72,7 @@ class CollectionDetailAdapter(private val onClickListener: OnClickListener) :
                 onClickListener.onCompleteTask()
             }
             binding.createTaskButton.setOnClickListener {
-//                binding.newTaskInput.text = null
-//                onClickListener.onCreateTask(binding.newTaskInput.text.toString())
+                onClickListener.onCreateTask()
             }
         }
 
