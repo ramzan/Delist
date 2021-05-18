@@ -8,7 +8,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginHorizontal="@dimen/defaultPadding"
         android:layout_marginVertical="@dimen/defaultPadding"
         android:background="@color/primary_inverse" />
 
@@ -18,7 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/defaultPadding"
-        android:layout_marginStart="@dimen/defaultPadding"
         android:text="Completed tasks" />
 
 </LinearLayout>

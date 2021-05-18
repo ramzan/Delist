@@ -21,8 +21,9 @@
         <item name="android:textColor">@color/primary_inverse</item>
     </style>
 
-    <style name="TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="TextButton" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
         <item name="android:textColor">@color/primary_inverse</item>
+        <item name="iconTint">@color/primary_inverse</item>
     </style>
 
     <!--Text input-->
