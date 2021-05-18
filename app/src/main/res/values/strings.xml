@@ -2,12 +2,12 @@
     <string name="app_name">Delist</string>
     <string name="name_input_hint">Name</string>
     <string name="new_collection_button_description">New collection button</string>
-    <string name="type">Type</string>
+    <string name="collection_type_input_hint">Task order</string>
     <string name="create_collection">Create collection</string>
     <string name="edit_collection">Edit collection</string>
-    <string name="type_queue">Queue</string>
-    <string name="type_stack">Stack</string>
-    <string name="type_randomizer">Randomizer</string>
+    <string name="type_queue">Oldest task first</string>
+    <string name="type_stack">Newest task first</string>
+    <string name="type_randomizer">Random</string>
     <string name="empty_collection_message">No tasks</string>
     <string name="bulleted_list_item">\u2022 %s</string>
 

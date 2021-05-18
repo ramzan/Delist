@@ -91,7 +91,7 @@
                     android:id="@+id/type_selector"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/type"
+                    android:hint="@string/collection_type_input_hint"
                     android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
