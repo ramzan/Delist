@@ -2,6 +2,7 @@ package ca.ramzan.delist.screens.collection_detail
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.EditText
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -30,6 +31,11 @@ class TaskInputDialogFragment : DialogFragment() {
                 /* no-op */
             }
             .setView(layout)
-            .create()
+            .create().apply {
+                window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+                setOnShowListener {
+                    input.requestFocus()
+                }
+            }
     }
 }
