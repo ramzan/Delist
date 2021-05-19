@@ -67,19 +67,6 @@ class CollectionDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun overflow() {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.addTasks((0 until 200).map {
-                Task(
-                    collectionId,
-                    it.toString(),
-                    completed = it % 2 == 0
-                )
-            }
-            )
-        }
-    }
-
     // region Factory ------------------------------------------------------------------------------
 
     @AssistedFactory

@@ -39,7 +39,7 @@ interface CollectionDatabaseDao {
     fun completeTask(collectionId: Long) {
         val collection = getCollection(collectionId)
         val oldTask = getTask(collection.currentTaskId ?: return)
-        updateTask(oldTask.copy(completed = true))
+        updateTask(oldTask.copy(timeCompleted = System.currentTimeMillis()))
         val newTaskId = when (collection.type) {
             CollectionType.STACK -> getTopOfStack(collection.id)
             CollectionType.QUEUE -> getFrontOfQueue(collection.id)
@@ -65,7 +65,7 @@ interface CollectionDatabaseDao {
             SELECT MIN(id)
             FROM task_table 
             WHERE task_table.collectionId = :collectionId
-            AND NOT completed
+            AND timeCompleted IS NULL
         """
     )
     fun getFrontOfQueue(collectionId: Long): Long?
@@ -75,7 +75,7 @@ interface CollectionDatabaseDao {
             SELECT MAX(id)
             FROM task_table 
             WHERE task_table.collectionId = :collectionId
-            AND NOT completed
+            AND timeCompleted IS NULL
         """
     )
     fun getTopOfStack(collectionId: Long): Long?
@@ -85,7 +85,7 @@ interface CollectionDatabaseDao {
             SELECT id 
             FROM task_table
             WHERE task_table.collectionId = :collectionId
-            AND NOT completed
+            AND timeCompleted IS NULL
     """
     )
     fun getIncompleteTasks(collectionId: Long): List<Long>
@@ -95,7 +95,8 @@ interface CollectionDatabaseDao {
             SELECT id, content
             FROM task_table
             WHERE task_table.collectionId = :collectionId
-            AND completed
+            AND timeCompleted IS NOT NULL
+            ORDER BY timeCompleted
     """
     )
     fun getCompletedTasks(collectionId: Long): Flow<List<CompletedTaskDisplay>>
@@ -143,7 +144,7 @@ interface CollectionDatabaseDao {
         }
     }
 
-    @Query("DELETE FROM task_table WHERE task_table.collectionId = :collectionId AND completed")
+    @Query("DELETE FROM task_table WHERE task_table.collectionId = :collectionId AND timeCompleted IS NOT NULL")
     fun deleteCompletedTasks(collectionId: Long)
     // endregion detail-----------------------------------------------------------------------------
 }

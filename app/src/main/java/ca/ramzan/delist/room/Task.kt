@@ -20,7 +20,7 @@ data class Task(
 
     val content: String,
 
-    val completed: Boolean = false,
+    val timeCompleted: Long? = null,
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
