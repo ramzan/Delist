@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.widget.doOnTextChanged
@@ -13,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import ca.ramzan.delist.R
 import ca.ramzan.delist.common.colorToType
+import ca.ramzan.delist.common.hideKeyboard
 import ca.ramzan.delist.common.safeNavigate
 import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionEditorBinding
@@ -57,7 +59,7 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
 
         binding.apply {
             editorToolbar.setNavigationOnClickListener {
-                findNavController().popBackStack()
+                goBack()
             }
 
             editorToolbar.title = getString(
@@ -67,7 +69,8 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
 
             editorToolbar.menu.getItem(0).setOnMenuItemClickListener {
                 viewModel.saveCollection()
-                findNavController().popBackStack()
+                goBack()
+                true
             }
 
             typeSelector.setAdapter(
@@ -123,6 +126,12 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
         }
 
         return binding.root
+    }
+
+    private fun goBack() {
+        requireContext().getSystemService(InputMethodManager::class.java)
+            .hideKeyboard(requireView().windowToken)
+        findNavController().popBackStack()
     }
 
     private fun getCollectionTypeName(type: CollectionType): String {

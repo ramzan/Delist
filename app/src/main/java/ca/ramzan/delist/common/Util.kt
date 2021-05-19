@@ -1,6 +1,8 @@
 package ca.ramzan.delist.common
 
 import android.content.res.Resources
+import android.os.IBinder
+import android.view.inputmethod.InputMethodManager
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import ca.ramzan.delist.R
@@ -10,6 +12,13 @@ fun NavController.safeNavigate(directions: NavDirections) {
     currentDestination?.getAction(directions.actionId)?.let {
         navigate(directions)
     }
+}
+
+fun InputMethodManager.hideKeyboard(windowToken: IBinder) {
+    this.hideSoftInputFromWindow(
+        windowToken,
+        InputMethodManager.HIDE_NOT_ALWAYS
+    )
 }
 
 fun colorToType(resources: Resources, color: Int): CollectionColor {
