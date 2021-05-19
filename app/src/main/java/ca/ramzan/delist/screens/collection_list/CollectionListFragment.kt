@@ -33,7 +33,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         savedInstanceState: Bundle?
     ): View {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
-        requireActivity().window.statusBarColor = resources.getColor(R.color.primary, null)
+        requireActivity().window.statusBarColor = resources.getColor(R.color.status_bar, null)
 
         val adapter = CollectionAdapter(
             ::goToCollection,
