@@ -1,5 +1,6 @@
 package ca.ramzan.delist.screens.collection_list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.ramzan.delist.room.CollectionDatabaseDao
@@ -20,7 +21,8 @@ class CollectionListViewModel @Inject constructor(private val dao: CollectionDat
 
     init {
         viewModelScope.launch {
-            dao.getCollectionDisplays().collect {
+            dao.getCollectionDisplaysManual().collect {
+                Log.d("zoop", "Collecting")
                 collections.emit(it)
             }
         }
@@ -29,6 +31,17 @@ class CollectionListViewModel @Inject constructor(private val dao: CollectionDat
     fun completeTask(collectionId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             dao.completeTask(collectionId)
+        }
+    }
+
+    fun moveItem(fromPos: Int, toPos: Int) {
+        Log.d("zoop", "Moving $fromPos -> $toPos")
+        collections.value.run {
+            val updatedList = this.map { it.id }.toMutableList()
+            updatedList.add(toPos, updatedList.removeAt(fromPos))
+            CoroutineScope(Dispatchers.IO).launch {
+                dao.updateCollectionsOrder(updatedList)
+            }
         }
     }
 }

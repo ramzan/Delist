@@ -30,7 +30,9 @@ data class Collection(
 
     val color: CollectionColor,
 
-    val currentTaskId: Long?,
+    val displayOrder: Long,
+
+    val currentTaskId: Long? = null,
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

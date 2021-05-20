@@ -19,10 +19,10 @@ interface CollectionDatabaseDao {
         FROM collection_table
         LEFT JOIN task_table
         ON collection_table.currentTaskId = task_table.id
-        ORDER BY name COLLATE NOCASE ASC
+        ORDER BY displayOrder
     """
     )
-    fun getCollectionDisplays(): Flow<List<CollectionDisplayData>>
+    fun getCollectionDisplaysManual(): Flow<List<CollectionDisplayData>>
 
     @Query(
         """
@@ -49,7 +49,20 @@ interface CollectionDatabaseDao {
     }
 
     @Insert
-    fun createCollection(collection: Collection)
+    fun insertCollection(collection: Collection)
+
+    fun createCollection(name: String, type: CollectionType, color: CollectionColor) {
+        insertCollection(Collection(type, name, color, getLastCollectionOrder() + 1))
+    }
+
+    @Transaction
+    fun updateCollectionsOrder(newOrder: List<Long>) {
+        var i = 1L
+        newOrder.forEach { id -> saveCollection(getCollection(id).copy(displayOrder = i++)) }
+    }
+
+    @Query("SELECT MAX(displayOrder) from collection_table")
+    fun getLastCollectionOrder(): Long
 
     @Update
     fun saveCollection(collection: Collection)

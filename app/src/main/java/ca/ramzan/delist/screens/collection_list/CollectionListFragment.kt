@@ -8,6 +8,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_IDLE
+import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.delist.R
 import ca.ramzan.delist.common.safeNavigate
 import ca.ramzan.delist.common.typeToColor
@@ -41,6 +44,10 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
             getString(R.string.empty_collection_message)
         )
 
+        binding.collectionList.adapter = adapter
+
+        ItemTouchHelper(getItemTouchCallback(adapter)).attachToRecyclerView(binding.collectionList)
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.collections.collect { list ->
                 adapter.submitList(list.map {
@@ -53,8 +60,6 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 })
             }
         }
-
-        binding.collectionList.adapter = adapter
 
         return binding.root
     }
@@ -92,6 +97,69 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                     )
                 }
                 show()
+            }
+        }
+    }
+
+    private fun getItemTouchCallback(adapter: CollectionAdapter): ItemTouchHelper.SimpleCallback {
+        return object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+            0
+        ) {
+
+            private var dragFrom = -1
+            private var dragTo = -1
+
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val dragFlags =
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END
+                val swipeFlags = 0
+                return makeMovementFlags(dragFlags, swipeFlags)
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPos = viewHolder.layoutPosition
+                val toPos = target.layoutPosition
+
+                if (dragFrom == -1) {
+                    dragFrom = fromPos
+                }
+                dragTo = toPos
+
+                val newList = adapter.currentList.toMutableList()
+                newList.add(toPos, newList.removeAt(fromPos))
+                adapter.submitList(newList)
+                return true
+            }
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+                if (actionState != ACTION_STATE_IDLE) viewHolder?.itemView?.alpha = 0.5f
+                if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
+                    viewModel.moveItem(dragFrom, dragTo)
+                }
+
+                dragFrom = -1
+                dragTo = -1
+            }
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                super.clearView(recyclerView, viewHolder)
+                viewHolder.itemView.alpha = 1.0f
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                /* no-op */
             }
         }
     }

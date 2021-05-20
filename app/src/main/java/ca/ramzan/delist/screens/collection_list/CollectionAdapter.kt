@@ -63,7 +63,6 @@ class CollectionAdapter(
     ): ListItemCollectionViewHolder {
         return ListItemCollectionViewHolder.from(parent)
     }
-
 }
 
 class CollectionDiffCallback : DiffUtil.ItemCallback<CollectionDisplay>() {
