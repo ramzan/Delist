@@ -103,6 +103,8 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
             .setAction(getString(R.string.undo)) {
                 viewModel.undoCompleteTask(collectionId)
             }
+            // setAnchorView causes a memory leak
+            // https://github.com/material-components/material-components-android/issues/2042
             .setAnchorView(requireActivity().findViewById<FloatingActionButton>(R.id.fab))
             .show()
     }
