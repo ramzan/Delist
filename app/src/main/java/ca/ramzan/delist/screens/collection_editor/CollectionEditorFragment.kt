@@ -69,7 +69,7 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
 
             editorToolbar.menu.getItem(0).setOnMenuItemClickListener {
                 viewModel.saveCollection()
-                goBack()
+                it.isEnabled = false
                 true
             }
 
@@ -91,6 +91,9 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
                         EditorState.Loading -> {
                             editorProgressbar.visibility = View.VISIBLE
                             editorLayout.visibility = View.GONE
+                        }
+                        is EditorState.Saved -> {
+                            goToCollection(state.collectionId)
                         }
                         is EditorState.Loaded -> {
                             nameInput.setText(state.nameInputText)
@@ -132,6 +135,14 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
         requireContext().getSystemService(InputMethodManager::class.java)
             .hideKeyboard(requireView().windowToken)
         findNavController().popBackStack()
+    }
+
+    private fun goToCollection(collectionId: Long) {
+        findNavController().safeNavigate(
+            CollectionEditorFragmentDirections.actionCollectionEditorFragmentToCollectionDetailFragment(
+                collectionId
+            )
+        )
     }
 
     private fun getCollectionTypeName(type: CollectionType): String {

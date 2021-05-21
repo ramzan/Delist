@@ -91,10 +91,10 @@ interface CollectionDatabaseDao {
 
 
     @Insert
-    fun insertCollection(collection: Collection)
+    fun insertCollection(collection: Collection): Long
 
-    fun createCollection(name: String, type: CollectionType, color: CollectionColor) {
-        insertCollection(Collection(type, name, color, getLastCollectionOrder() + 1))
+    fun createCollection(name: String, type: CollectionType, color: CollectionColor): Long {
+        return insertCollection(Collection(type, name, color, getLastCollectionOrder() + 1))
     }
 
     @Transaction
