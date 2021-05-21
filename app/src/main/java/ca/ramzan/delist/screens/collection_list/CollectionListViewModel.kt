@@ -56,6 +56,12 @@ class CollectionListViewModel @Inject constructor(
         }
     }
 
+    fun undoCompleteTask(collectionId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.undoCompleteTask(collectionId)
+        }
+    }
+
     fun moveItem(fromPos: Int, toPos: Int) {
         collections.value.run {
             val updatedList = this.map { it.id }.toMutableList()

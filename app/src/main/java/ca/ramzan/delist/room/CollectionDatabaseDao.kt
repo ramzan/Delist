@@ -70,6 +70,26 @@ interface CollectionDatabaseDao {
         updateCollection(collection.copy(currentTaskId = newTaskId))
     }
 
+    @Transaction
+    fun undoCompleteTask(collectionId: Long) {
+        val collection = getCollection(collectionId)
+        val lastCompletedTask = getLastCompletedTask(collectionId) ?: return
+        updateTask(lastCompletedTask.copy(timeCompleted = null))
+        updateCollection(collection.copy(currentTaskId = lastCompletedTask.id))
+    }
+
+    @Query(
+        """
+            SELECT collectionId, content, MAX(timeCompleted) as timeCompleted, id
+            FROM task_table 
+            WHERE task_table.collectionId = :collectionId
+            AND timeCompleted IS NOT NULL
+            LIMIT 1
+        """
+    )
+    fun getLastCompletedTask(collectionId: Long): Task?
+
+
     @Insert
     fun insertCollection(collection: Collection)
 

@@ -10,6 +10,8 @@
     <string name="type_randomizer">Random</string>
     <string name="empty_collection_message">No tasks</string>
     <string name="bulleted_list_item">\u2022 %s</string>
+    <string name="undo">Undo</string>
+    <string name="complete_task_message">Task completed</string>
 
     <string-array name="collection_type_array">
         <item>@string/type_queue</item>

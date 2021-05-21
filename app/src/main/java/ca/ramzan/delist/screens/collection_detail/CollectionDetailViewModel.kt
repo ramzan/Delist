@@ -61,6 +61,13 @@ class CollectionDetailViewModel @AssistedInject constructor(
         }
     }
 
+
+    fun undoCompleteTask() {
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.undoCompleteTask(collectionId)
+        }
+    }
+
     fun clearCompleted() {
         CoroutineScope(Dispatchers.IO).launch {
             dao.deleteCompletedTasks(collectionId)

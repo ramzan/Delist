@@ -21,6 +21,7 @@ import ca.ramzan.delist.databinding.FragmentCollectionListBinding
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -94,6 +95,16 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
     private fun completeTask(collectionId: Long) {
         viewModel.completeTask(collectionId)
+        Snackbar.make(
+            requireView(),
+            getString(R.string.complete_task_message),
+            Snackbar.LENGTH_SHORT
+        )
+            .setAction(getString(R.string.undo)) {
+                viewModel.undoCompleteTask(collectionId)
+            }
+            .setAnchorView(requireActivity().findViewById<FloatingActionButton>(R.id.fab))
+            .show()
     }
 
     private fun setUpBottomBar() {

@@ -16,6 +16,7 @@ import ca.ramzan.delist.databinding.FragmentCollectionDetailBinding
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -56,6 +57,15 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
 
             override fun onCompleteTask() {
                 viewModel.completeTask()
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.complete_task_message),
+                    Snackbar.LENGTH_SHORT
+                )
+                    .setAction(getString(R.string.undo)) {
+                        viewModel.undoCompleteTask()
+                    }
+                    .show()
             }
         })
 
