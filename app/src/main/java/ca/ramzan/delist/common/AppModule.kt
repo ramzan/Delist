@@ -1,7 +1,9 @@
 package ca.ramzan.delist.common
 
 import android.app.Application
+import android.content.SharedPreferences
 import android.view.inputmethod.InputMethodManager
+import androidx.preference.PreferenceManager
 import ca.ramzan.delist.room.CollectionDatabase
 import dagger.Module
 import dagger.Provides
@@ -25,4 +27,9 @@ class AppModule {
     @Singleton
     fun imm(app: Application): InputMethodManager =
         app.getSystemService(InputMethodManager::class.java)
+
+    @Provides
+    @Singleton
+    fun prefs(app: Application): SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(app.applicationContext)
 }

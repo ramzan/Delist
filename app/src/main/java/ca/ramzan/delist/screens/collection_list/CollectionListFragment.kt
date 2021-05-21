@@ -1,10 +1,12 @@
 package ca.ramzan.delist.screens.collection_list
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -21,11 +23,22 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
+
+const val PREF_COLLECTION_ORDER_KEY = "PREF_COLLECTION_ORDER_KEY"
+const val PREF_COLLECTION_ORDER_MANUAL = "PREF_COLLECTION_ORDER_MANUAL"
+const val PREF_COLLECTION_ORDER_ASC = "PREF_COLLECTION_ORDER_ASC"
+const val PREF_COLLECTION_ORDER_DESC = "PREF_COLLECTION_ORDER_DESC"
 
 @AndroidEntryPoint
 class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
+    @Inject
+    lateinit var prefs: SharedPreferences
+
     private val viewModel: CollectionListViewModel by viewModels()
+
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onStart() {
         super.onStart()
@@ -47,7 +60,13 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
         binding.collectionList.adapter = adapter
 
-        ItemTouchHelper(getItemTouchCallback(adapter)).attachToRecyclerView(binding.collectionList)
+        itemTouchHelper = ItemTouchHelper(getItemTouchCallback(adapter))
+        enableReordering(
+            prefs.getString(
+                PREF_COLLECTION_ORDER_KEY,
+                PREF_COLLECTION_ORDER_MANUAL
+            ) == PREF_COLLECTION_ORDER_MANUAL
+        )
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.collections.collect { list ->
@@ -58,7 +77,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                         typeToColor(resources, it.color),
                         it.task
                     )
-                }.toMutableList())
+                })
             }
         }
 
@@ -83,7 +102,28 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 visibility = View.VISIBLE
                 setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.sort -> {
+                        R.id.manual_sort -> {
+                            prefs.edit {
+                                putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_MANUAL)
+                            }
+                            viewModel.getCollections()
+                            enableReordering(true)
+                            true
+                        }
+                        R.id.alpha_asc_sort -> {
+                            prefs.edit {
+                                putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_ASC)
+                            }
+                            viewModel.getCollections()
+                            enableReordering(false)
+                            true
+                        }
+                        R.id.alpha_desc_sort -> {
+                            prefs.edit {
+                                putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_DESC)
+                            }
+                            viewModel.getCollections()
+                            enableReordering(false)
                             true
                         }
                         else -> false
@@ -100,6 +140,10 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 show()
             }
         }
+    }
+
+    private fun enableReordering(enable: Boolean) {
+        itemTouchHelper.attachToRecyclerView(if (enable) binding.collectionList else null)
     }
 
     private fun getItemTouchCallback(adapter: CollectionAdapter): ItemTouchHelper.SimpleCallback {

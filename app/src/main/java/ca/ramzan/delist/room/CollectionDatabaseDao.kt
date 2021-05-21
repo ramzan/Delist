@@ -30,6 +30,28 @@ interface CollectionDatabaseDao {
         FROM collection_table
         LEFT JOIN task_table
         ON collection_table.currentTaskId = task_table.id
+        ORDER BY name ASC
+    """
+    )
+    fun getCollectionDisplaysAsc(): Flow<List<CollectionDisplayData>>
+
+    @Query(
+        """
+        SELECT collection_table.id, name, color, content AS task
+        FROM collection_table
+        LEFT JOIN task_table
+        ON collection_table.currentTaskId = task_table.id
+        ORDER BY name DESC
+    """
+    )
+    fun getCollectionDisplaysDesc(): Flow<List<CollectionDisplayData>>
+
+    @Query(
+        """
+        SELECT collection_table.id, name, color, content AS task
+        FROM collection_table
+        LEFT JOIN task_table
+        ON collection_table.currentTaskId = task_table.id
         WHERE collection_table.id = :collectionId
     """
     )
