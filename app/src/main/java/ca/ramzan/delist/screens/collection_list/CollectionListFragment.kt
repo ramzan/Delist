@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -57,7 +58,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                         typeToColor(resources, it.color),
                         it.task
                     )
-                })
+                }.toMutableList())
             }
         }
 
@@ -141,11 +142,13 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
-                if (actionState != ACTION_STATE_IDLE) viewHolder?.itemView?.alpha = 0.5f
+                if (actionState != ACTION_STATE_IDLE) {
+                    viewHolder?.itemView?.alpha = 0.5f
+                    viewHolder?.itemView?.findViewById<TextView>(R.id.item_text)?.maxLines = 1
+                }
                 if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
                     viewModel.moveItem(dragFrom, dragTo)
                 }
-
                 dragFrom = -1
                 dragTo = -1
             }
@@ -156,6 +159,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
             ) {
                 super.clearView(recyclerView, viewHolder)
                 viewHolder.itemView.alpha = 1.0f
+                viewHolder.itemView.findViewById<TextView>(R.id.item_text)?.maxLines = 3
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
