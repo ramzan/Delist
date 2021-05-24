@@ -68,7 +68,7 @@
                 android:layout_height="48dp"
                 android:layout_marginHorizontal="@dimen/defaultPadding"
                 android:background="@drawable/list_item_color_bg"
-                android:contentDescription="Choose color button"
+                android:contentDescription="@string/collection_color_button_description"
                 android:foreground="@drawable/list_item_color_fg"
                 app:layout_constraintBottom_toBottomOf="@id/name_input_layout"
                 app:layout_constraintEnd_toEndOf="parent"
