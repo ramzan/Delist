@@ -9,9 +9,24 @@
         android:id="@+id/collection_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/status_bar_height"
         android:clipToPadding="false"
         android:paddingBottom="?attr/actionBarSize"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/list_item_collection" />
+
+    <FrameLayout
+        android:id="@+id/scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:behavior_hideable="true"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:menu="@menu/nav_drawer" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

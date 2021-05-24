@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.widget.doOnTextChanged
@@ -110,15 +111,17 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
                             }
 
                             typeToColor(resources, state.color).let { color ->
-                                editorToolbar.background.setTint(color)
-                                requireActivity().window.statusBarColor = color
+                                editorToolbar.setBackgroundColor(color)
+                                binding.root.setBackgroundColor(color)
+                                binding.editorLayout.setBackgroundColor(
+                                    ResourcesCompat.getColor(resources, R.color.primary, null)
+                                )
                                 colorButton.background.colorFilter =
                                     BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
                                         color,
                                         BlendModeCompat.SRC_ATOP
                                     )
                             }
-
 
                             editorProgressbar.visibility = View.GONE
                             editorLayout.visibility = View.VISIBLE

@@ -1,12 +1,17 @@
 package ca.ramzan.delist.screens.collection_list
 
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.edit
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -20,7 +25,9 @@ import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionListBinding
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.math.MathUtils.lerp
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -51,7 +58,6 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         savedInstanceState: Bundle?
     ): View {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
-        requireActivity().window.statusBarColor = resources.getColor(R.color.status_bar, null)
 
         val adapter = CollectionAdapter(
             ::goToCollection,
@@ -111,7 +117,9 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
     private fun setUpBottomBar() {
         requireActivity().run {
-            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.run {
+            val bottomBar = findViewById<BottomAppBar>(R.id.bottom_app_bar) ?: return
+            val fab = findViewById<FloatingActionButton>(R.id.fab) ?: return
+            bottomBar.apply {
                 visibility = View.VISIBLE
                 setOnMenuItemClickListener {
                     when (it.itemId) {
@@ -142,8 +150,56 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                         else -> false
                     }
                 }
+                val bottomSheetBehavior = BottomSheetBehavior.from(binding.navView)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+                setNavigationOnClickListener {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+
+                binding.navView.setNavigationItemSelectedListener { menuItem ->
+                    // Handle menu item selected
+                    menuItem.isChecked = true
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    true
+                }
+
+                binding.scrim.setOnClickListener {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                bottomSheetBehavior.addBottomSheetCallback(object :
+                    BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                        val baseColor = Color.BLACK
+                        // 60% opacity
+                        val baseAlpha =
+                            ResourcesCompat.getFloat(resources, R.dimen.material_emphasis_medium)
+                        // Map slideOffset from [-1.0, 1.0] to [0.0, 1.0]
+                        val offset = (slideOffset - (-1f)) / (1f - (-1f)) * (1f - 0f) + 0f
+                        val alpha = lerp(0f, 255f, offset * baseAlpha).toInt()
+                        val color =
+                            Color.argb(alpha, baseColor.red, baseColor.green, baseColor.blue)
+                        binding.scrim.setBackgroundColor(color)
+                    }
+
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_HIDDEN -> {
+                                binding.scrim.visibility = View.GONE
+                                bottomBar.visibility = View.VISIBLE
+                                fab.show()
+                            }
+                            else -> {
+                                binding.scrim.visibility = View.VISIBLE
+                                bottomBar.visibility = View.GONE
+                                fab.hide()
+                            }
+                        }
+                    }
+                })
             }
-            findViewById<FloatingActionButton>(R.id.fab)?.run {
+            fab.apply {
                 setImageResource(R.drawable.ic_baseline_add_24)
                 setOnClickListener {
                     findNavController(R.id.nav_host_fragment).safeNavigate(

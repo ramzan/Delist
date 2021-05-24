@@ -84,7 +84,6 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             typeToColor(resources, state.collection.color).let { color ->
                                 setBackgroundColor(color)
                                 binding.root.setBackgroundColor(color)
-                                requireActivity().window.statusBarColor = color
                             }
                             setNavigationOnClickListener {
                                 findNavController().popBackStack(R.id.collectionListFragment, false)
