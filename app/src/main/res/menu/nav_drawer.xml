@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <group
-        android:id="@+id/group1"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/item1"
-            android:checked="true"
-            android:icon="@drawable/ic_baseline_add_24"
-            android:title="Item 1" />
-        <item
-            android:id="@+id/item2"
-            android:icon="@drawable/ic_baseline_delete_24"
-            android:title="Item 2" />
-        <item
-            android:id="@+id/item3"
-            android:icon="@drawable/ic_baseline_filter_list_24"
-            android:title="Item 3" />
-    </group>
+    <item
+        android:id="@+id/about"
+        android:checkable="false"
+        android:icon="@drawable/ic_baseline_info_24"
+        android:title="@string/about" />
 
 </menu>

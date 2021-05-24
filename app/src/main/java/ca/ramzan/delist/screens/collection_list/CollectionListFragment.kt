@@ -1,7 +1,9 @@
 package ca.ramzan.delist.screens.collection_list
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -158,8 +160,9 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 }
 
                 binding.navView.setNavigationItemSelectedListener { menuItem ->
-                    // Handle menu item selected
-                    menuItem.isChecked = true
+                    when (menuItem.itemId) {
+                        R.id.about -> onAboutClicked()
+                    }
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     true
                 }
@@ -209,6 +212,10 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 show()
             }
         }
+    }
+
+    private fun onAboutClicked() {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ramzan/Delist")))
     }
 
     private fun enableReordering(enable: Boolean) {
