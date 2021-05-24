@@ -30,7 +30,7 @@ interface CollectionDatabaseDao {
         FROM collection_table
         LEFT JOIN task_table
         ON collection_table.currentTaskId = task_table.id
-        ORDER BY name ASC
+        ORDER BY name COLLATE NOCASE ASC
     """
     )
     fun getCollectionDisplaysAsc(): Flow<List<CollectionDisplayData>>
@@ -41,7 +41,7 @@ interface CollectionDatabaseDao {
         FROM collection_table
         LEFT JOIN task_table
         ON collection_table.currentTaskId = task_table.id
-        ORDER BY name DESC
+        ORDER BY name COLLATE NOCASE DESC
     """
     )
     fun getCollectionDisplaysDesc(): Flow<List<CollectionDisplayData>>
