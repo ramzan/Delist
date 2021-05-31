@@ -16,11 +16,9 @@ import javax.inject.Singleton
 class AppModule {
 
     @Provides
-    @Singleton
     fun db(app: Application) = CollectionDatabase.getInstance(app)
 
     @Provides
-    @Singleton
     fun dao(db: CollectionDatabase) = db.collectionDatabaseDao
 
     @Provides

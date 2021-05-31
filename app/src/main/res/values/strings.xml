@@ -14,6 +14,8 @@
     <string name="complete_task_message">Task completed</string>
     <string name="collection_color_button_description">Choose collection color</string>
     <string name="about">About</string>
+    <string name="import_database">Import</string>
+    <string name="export_database">Export</string>
 
     <string-array name="collection_type_array">
         <item>@string/type_queue</item>

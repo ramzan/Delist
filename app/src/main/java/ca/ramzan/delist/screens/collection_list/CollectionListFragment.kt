@@ -1,10 +1,12 @@
 package ca.ramzan.delist.screens.collection_list
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,9 +24,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_IDLE
 import androidx.recyclerview.widget.RecyclerView
 import ca.ramzan.delist.R
+import ca.ramzan.delist.common.MainActivity
 import ca.ramzan.delist.common.safeNavigate
 import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionListBinding
+import ca.ramzan.delist.room.CollectionDatabase
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -162,6 +166,8 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 binding.navView.setNavigationItemSelectedListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.about -> onAboutClicked()
+                        R.id.import_data -> importDb()
+                        R.id.export_data -> exportDb()
                     }
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     true
@@ -213,6 +219,56 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
             }
         }
     }
+
+    private fun importDb() {
+        try {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("application/octet-stream")
+
+            startActivityForResult(intent, REQUEST_IMPORT)
+        } catch (t: Throwable) {
+            Log.e(TAG, "Exception obtaining document for import", t)
+        }
+
+    }
+
+    private fun exportDb() {
+        try {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("application/octet-stream")
+                .putExtra(Intent.EXTRA_TITLE, DEFAULT_EXPORT_TITLE)
+
+            startActivityForResult(intent, REQUEST_EXPORT)
+        } catch (t: Throwable) {
+            Log.e(TAG, "Exception obtaining document for export", t)
+        }
+
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        when (requestCode) {
+            REQUEST_EXPORT -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    data?.data?.let { uri -> CollectionDatabase.copyTo(requireContext(), uri) }
+                }
+            }
+            REQUEST_IMPORT -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    data?.data?.let { uri -> CollectionDatabase.copyFrom(requireContext(), uri) }
+                    startActivity(Intent(requireActivity(), MainActivity::class.java))
+                    requireActivity().finish()
+                }
+            }
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
 
     private fun onAboutClicked() {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ramzan/Delist")))
@@ -288,3 +344,8 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         }
     }
 }
+
+private const val DEFAULT_EXPORT_TITLE = "DelistBackup.db"
+private const val REQUEST_EXPORT = 1337
+private const val REQUEST_IMPORT = 1338
+private const val TAG = "Delist Backup/Restore"
