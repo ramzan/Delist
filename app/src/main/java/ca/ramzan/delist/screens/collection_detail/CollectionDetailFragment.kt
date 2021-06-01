@@ -14,12 +14,16 @@ import ca.ramzan.delist.common.safeNavigate
 import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionDetailBinding
 import ca.ramzan.delist.screens.BaseFragment
+import ca.ramzan.delist.screens.dialogs.CONFIRMATION_RESULT
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
+
+const val KEY_COLLECTION_DELETED = "KEY_COLLECTION_DELETED"
+const val KEY_COMPLETED_DELETED = "KEY_COMPLETED_DELETED"
 
 @AndroidEntryPoint
 class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>() {
@@ -40,6 +44,13 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         setFragmentResultListener(TASK_INPUT_RESULT) { _, bundle ->
             bundle.getString(TASK_INPUT_TEXT)?.let {
                 viewModel.addTasks(it)
+            }
+        }
+        setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
+            if (bundle.getBoolean(KEY_COLLECTION_DELETED, false)) {
+                viewModel.deleteCollection()
+            } else if (bundle.getBoolean(KEY_COMPLETED_DELETED, false)) {
+                viewModel.clearCompleted()
             }
         }
     }
@@ -91,11 +102,11 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             setOnMenuItemClickListener { menuItem ->
                                 when (menuItem.itemId) {
                                     R.id.delete_collection -> {
-                                        viewModel.deleteCollection()
+                                        showDeleteCollectionDialog()
                                         true
                                     }
                                     R.id.delete_completed -> {
-                                        viewModel.clearCompleted()
+                                        showDeleteCompletedDialog()
                                         true
                                     }
                                     R.id.edit -> {
@@ -137,6 +148,29 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
 
         return binding.root
     }
+
+    private fun showDeleteCollectionDialog() {
+        findNavController().safeNavigate(
+            CollectionDetailFragmentDirections.actionCollectionDetailFragmentToConfirmationDialog(
+                R.string.delete_collection_dialog_title,
+                R.string.message_action_cannot_be_undone,
+                R.string.delete,
+                KEY_COLLECTION_DELETED
+            )
+        )
+    }
+
+    private fun showDeleteCompletedDialog() {
+        findNavController().safeNavigate(
+            CollectionDetailFragmentDirections.actionCollectionDetailFragmentToConfirmationDialog(
+                R.string.delete_completed_dialog_title,
+                R.string.message_action_cannot_be_undone,
+                R.string.delete,
+                KEY_COMPLETED_DELETED
+            )
+        )
+    }
+
 
     private fun showTaskInputDialog() {
         findNavController().safeNavigate(

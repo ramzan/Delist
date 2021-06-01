@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_collectionDetailFragment_to_taskInputDialogFragment"
             app:destination="@id/taskInputDialogFragment" />
+        <action
+            android:id="@+id/action_collectionDetailFragment_to_confirmationDialog"
+            app:destination="@id/confirmationDialog" />
     </fragment>
     <fragment
         android:id="@+id/collectionEditorFragment"
@@ -73,4 +76,21 @@
         android:id="@+id/taskInputDialogFragment"
         android:name="ca.ramzan.delist.screens.collection_detail.TaskInputDialogFragment"
         android:label="TaskInputDialogFragment" />
+    <dialog
+        android:id="@+id/confirmationDialog"
+        android:name="ca.ramzan.delist.screens.dialogs.ConfirmationDialog"
+        android:label="ConfirmationDialog">
+        <argument
+            android:name="titleId"
+            app:argType="reference" />
+        <argument
+            android:name="messageId"
+            app:argType="reference" />
+        <argument
+            android:name="positiveButtonMessage"
+            app:argType="reference" />
+        <argument
+            android:name="listenerKey"
+            app:argType="string" />
+    </dialog>
 </navigation>
