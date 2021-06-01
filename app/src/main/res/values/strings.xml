@@ -24,6 +24,10 @@
     <string name="collection_type_selector_header_title">Task order</string>
     <string name="sort">Sort</string>
     <string name="no_collection_message">Tap \'+\' to create a collection</string>
+    <string name="theme">Theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
 
     <string-array name="collection_type_array">
         <item>@string/type_queue</item>
@@ -35,5 +39,11 @@
         <item quantity="one">%d completed task</item>
         <item quantity="other">%d completed tasks</item>
     </plurals>
+
+    <string-array name="theme_string_array">
+        <item>@string/light</item>
+        <item>@string/dark</item>
+        <item>@string/system</item>
+    </string-array>
 
 </resources>

@@ -7,6 +7,12 @@
         android:title="@string/about" />
 
     <item
+        android:id="@+id/theme"
+        android:checkable="false"
+        android:icon="@drawable/ic_baseline_info_24"
+        android:title="@string/theme" />
+
+    <item
         android:id="@+id/import_data"
         android:checkable="false"
         android:icon="@drawable/ic_baseline_info_24"

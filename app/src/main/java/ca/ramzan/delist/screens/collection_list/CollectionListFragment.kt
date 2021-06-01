@@ -208,6 +208,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 binding.navView.setNavigationItemSelectedListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.about -> onAboutClicked()
+                        R.id.theme -> showThemeSelector()
                         R.id.import_data -> importDb()
                         R.id.export_data -> exportDb()
                     }
@@ -260,6 +261,12 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 show()
             }
         }
+    }
+
+    private fun showThemeSelector() {
+        findNavController().safeNavigate(
+            CollectionListFragmentDirections.actionCollectionListFragmentToThemeSelectorDialog()
+        )
     }
 
     private fun importDb() {

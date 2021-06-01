@@ -24,6 +24,9 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_collectionListFragment_to_themeSelectorDialog"
+            app:destination="@id/themeSelectorDialog" />
     </fragment>
     <fragment
         android:id="@+id/collectionDetailFragment"
@@ -93,4 +96,8 @@
             android:name="listenerKey"
             app:argType="string" />
     </dialog>
+    <dialog
+        android:id="@+id/themeSelectorDialog"
+        android:name="ca.ramzan.delist.screens.dialogs.ThemeSelectorDialog"
+        android:label="ThemeSelectorDialog" />
 </navigation>
