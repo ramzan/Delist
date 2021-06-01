@@ -39,6 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
+const val PREF_COLLECTION_HIDE_ARCHIVED = "PREF_COLLECTION_HIDE_ARCHIVED"
 const val PREF_COLLECTION_ORDER_KEY = "PREF_COLLECTION_ORDER_KEY"
 const val PREF_COLLECTION_ORDER_MANUAL = "PREF_COLLECTION_ORDER_MANUAL"
 const val PREF_COLLECTION_ORDER_ASC = "PREF_COLLECTION_ORDER_ASC"
@@ -137,15 +138,27 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                             true
                     }
                 }
+
+                menu.findItem(R.id.hide_archived).isChecked =
+                    prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, false)
+
                 setOnMenuItemClickListener {
-                    it.isChecked = true
                     when (it.itemId) {
+                        R.id.hide_archived -> {
+                            it.isChecked = !it.isChecked
+                            prefs.edit {
+                                putBoolean(PREF_COLLECTION_HIDE_ARCHIVED, it.isChecked)
+                            }
+                            viewModel.getCollections()
+                            true
+                        }
                         R.id.manual_sort -> {
                             prefs.edit {
                                 putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_MANUAL)
                             }
                             viewModel.getCollections()
                             enableReordering(true)
+                            it.isChecked = true
                             true
                         }
                         R.id.alpha_asc_sort -> {
@@ -154,6 +167,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                             }
                             viewModel.getCollections()
                             enableReordering(false)
+                            it.isChecked = true
                             true
                         }
                         R.id.alpha_desc_sort -> {
@@ -162,6 +176,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                             }
                             viewModel.getCollections()
                             enableReordering(false)
+                            it.isChecked = true
                             true
                         }
                         else -> false

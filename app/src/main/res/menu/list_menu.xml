@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:icon="@drawable/ic_baseline_sort_24">
 
     <item
-        android:id="@+id/sort"
-        android:contentDescription="@string/sort"
-        android:icon="@drawable/ic_baseline_sort_24"
-        android:title="@string/sort"
+        android:id="@+id/sort_filter_menu"
+        android:contentDescription="Sort/filter"
+        android:icon="@drawable/ic_baseline_filter_list_24"
+        android:title="Sort/filter"
         app:showAsAction="ifRoom">
 
         <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/manual_sort"
-                    android:contentDescription="Manual"
-                    android:title="Manual"
-                    app:showAsAction="never" />
+            <item
+                android:id="@+id/hide_archived"
+                android:checkable="true"
+                android:contentDescription="Hide archived"
+                android:title="Hide archived"
+                app:showAsAction="never" />
 
-                <item
-                    android:id="@+id/alpha_asc_sort"
-                    android:contentDescription="A -> Z"
-                    android:title="A -> Z"
-                    app:showAsAction="never" />
+            <item
+                android:id="@+id/sort"
+                android:contentDescription="@string/sort"
+                android:title="@string/sort"
+                app:showAsAction="never">
 
-                <item
-                    android:id="@+id/alpha_desc_sort"
-                    android:contentDescription="Z -> A"
-                    android:title="Z -> A"
-                    app:showAsAction="never" />
-            </group>
+                <menu>
+                    <group android:checkableBehavior="single">
+                        <item
+                            android:id="@+id/manual_sort"
+                            android:contentDescription="Manual"
+                            android:title="Manual"
+                            app:showAsAction="never" />
+
+                        <item
+                            android:id="@+id/alpha_asc_sort"
+                            android:contentDescription="A -> Z"
+                            android:title="A -> Z"
+                            app:showAsAction="never" />
+
+                        <item
+                            android:id="@+id/alpha_desc_sort"
+                            android:contentDescription="Z -> A"
+                            android:title="Z -> A"
+                            app:showAsAction="never" />
+                    </group>
+                </menu>
+            </item>
         </menu>
     </item>
+
 </menu>
 

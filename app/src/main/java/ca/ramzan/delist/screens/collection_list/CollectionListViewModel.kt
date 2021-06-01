@@ -44,8 +44,12 @@ class CollectionListViewModel @Inject constructor(
                     dao.getCollectionDisplaysDesc()
                 }
                 else -> throw Exception("Illegal order: $order")
-            }.collect {
-                collections.emit(it)
+            }.collect { list ->
+                collections.emit(
+                    if (prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, false)) {
+                        list.filter { !it.archived }
+                    } else list
+                )
             }
         }
     }
@@ -64,10 +68,11 @@ class CollectionListViewModel @Inject constructor(
 
     fun moveItem(fromPos: Int, toPos: Int) {
         collections.value.run {
-            val updatedList = this.map { it.id }.toMutableList()
-            updatedList.add(toPos, updatedList.removeAt(fromPos))
             CoroutineScope(Dispatchers.IO).launch {
-                dao.updateCollectionsOrder(updatedList)
+                dao.updateCollectionsOrder(
+                    collections.value[fromPos].id,
+                    collections.value[toPos].id
+                )
             }
         }
     }

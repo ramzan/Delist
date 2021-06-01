@@ -15,7 +15,7 @@ interface CollectionDatabaseDao {
 
     @Query(
         """
-        SELECT collection_table.id, name, color, content AS task
+        SELECT collection_table.id, name, color, archived, content AS task
         FROM collection_table
         LEFT JOIN task_table
         ON collection_table.currentTaskId = task_table.id
@@ -26,7 +26,7 @@ interface CollectionDatabaseDao {
 
     @Query(
         """
-        SELECT collection_table.id, name, color, content AS task
+        SELECT collection_table.id, name, color, archived, content AS task
         FROM collection_table
         LEFT JOIN task_table
         ON collection_table.currentTaskId = task_table.id
@@ -37,7 +37,7 @@ interface CollectionDatabaseDao {
 
     @Query(
         """
-        SELECT collection_table.id, name, color, content AS task
+        SELECT collection_table.id, name, color, archived, content AS task
         FROM collection_table
         LEFT JOIN task_table
         ON collection_table.currentTaskId = task_table.id
@@ -48,7 +48,7 @@ interface CollectionDatabaseDao {
 
     @Query(
         """
-        SELECT collection_table.id, name, color, content AS task
+        SELECT collection_table.id, name, color, archived, content AS task
         FROM collection_table
         LEFT JOIN task_table
         ON collection_table.currentTaskId = task_table.id
@@ -89,7 +89,6 @@ interface CollectionDatabaseDao {
     )
     fun getLastCompletedTask(collectionId: Long): Task?
 
-
     @Insert
     fun insertCollection(collection: Collection): Long
 
@@ -97,10 +96,28 @@ interface CollectionDatabaseDao {
         return insertCollection(Collection(type, name, color, getLastCollectionOrder() + 1))
     }
 
+    @Query(
+        """
+            SELECT id
+            FROM collection_table
+            ORDER BY displayOrder
+        """
+    )
+    fun getCollectionOrdering(): List<Long>
+
     @Transaction
-    fun updateCollectionsOrder(newOrder: List<Long>) {
-        var i = 1L
-        newOrder.forEach { id -> saveCollection(getCollection(id).copy(displayOrder = i++)) }
+    fun updateCollectionsOrder(movedId: Long, behindId: Long) {
+        val sortedIds = getCollectionOrdering().toMutableList()
+        val fromPos = sortedIds.indexOf(movedId)
+        val toPos = sortedIds.indexOf(behindId)
+        var i = fromPos
+
+        if (fromPos < toPos) while (i < toPos) sortedIds[i] = sortedIds[++i]
+        else while (i > toPos) sortedIds[i] = sortedIds[--i]
+        sortedIds[toPos] = movedId
+
+        var j = 1L
+        sortedIds.forEach { id -> saveCollection(getCollection(id).copy(displayOrder = j++)) }
     }
 
     @Query("SELECT MAX(displayOrder) from collection_table")
@@ -201,5 +218,9 @@ interface CollectionDatabaseDao {
 
     @Query("DELETE FROM task_table WHERE task_table.collectionId = :collectionId AND timeCompleted IS NOT NULL")
     fun deleteCompletedTasks(collectionId: Long)
+
+    fun archiveCollection(collectionId: Long, isArchived: Boolean) {
+        saveCollection(getCollection(collectionId).copy(archived = isArchived))
+    }
     // endregion detail-----------------------------------------------------------------------------
 }

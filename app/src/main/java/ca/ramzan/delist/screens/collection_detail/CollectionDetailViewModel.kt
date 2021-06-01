@@ -74,6 +74,12 @@ class CollectionDetailViewModel @AssistedInject constructor(
         }
     }
 
+    fun archiveCollection(archived: Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.archiveCollection(collectionId, archived)
+        }
+    }
+
     // region Factory ------------------------------------------------------------------------------
 
     @AssistedFactory

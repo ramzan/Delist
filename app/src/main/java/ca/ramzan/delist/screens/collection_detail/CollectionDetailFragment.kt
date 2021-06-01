@@ -99,8 +99,23 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             setNavigationOnClickListener {
                                 findNavController().popBackStack(R.id.collectionListFragment, false)
                             }
+                            if (state.collection.archived) {
+                                menu.findItem(R.id.archive).isVisible = false
+                                menu.findItem(R.id.unarchive).isVisible = true
+                            } else {
+                                menu.findItem(R.id.archive).isVisible = true
+                                menu.findItem(R.id.unarchive).isVisible = false
+                            }
                             setOnMenuItemClickListener { menuItem ->
                                 when (menuItem.itemId) {
+                                    R.id.archive -> {
+                                        viewModel.archiveCollection(true)
+                                        true
+                                    }
+                                    R.id.unarchive -> {
+                                        viewModel.archiveCollection(false)
+                                        true
+                                    }
                                     R.id.delete_collection -> {
                                         showDeleteCollectionDialog()
                                         true

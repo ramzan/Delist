@@ -32,6 +32,8 @@ data class Collection(
 
     val displayOrder: Long,
 
+    val archived: Boolean = false,
+
     val currentTaskId: Long? = null,
 
     @PrimaryKey(autoGenerate = true)
@@ -42,5 +44,6 @@ class CollectionDisplayData(
     val id: Long,
     val name: String,
     val color: CollectionColor,
+    val archived: Boolean,
     val task: String?
 )

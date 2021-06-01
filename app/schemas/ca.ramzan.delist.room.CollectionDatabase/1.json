@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "deb2187daa5b5fce0b5b4d38e40777b8",
+    "identityHash": "e0c62562fa5d21eb4ba21f0bf61b1798",
     "entities": [
       {
         "tableName": "collection_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`type` TEXT NOT NULL, `name` TEXT NOT NULL, `color` TEXT NOT NULL, `displayOrder` INTEGER NOT NULL, `currentTaskId` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`type` TEXT NOT NULL, `name` TEXT NOT NULL, `color` TEXT NOT NULL, `displayOrder` INTEGER NOT NULL, `archived` INTEGER NOT NULL, `currentTaskId` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "type",
@@ -29,6 +29,12 @@
           {
             "fieldPath": "displayOrder",
             "columnName": "displayOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "archived",
+            "columnName": "archived",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -117,7 +123,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'deb2187daa5b5fce0b5b4d38e40777b8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e0c62562fa5d21eb4ba21f0bf61b1798')"
     ]
   }
 }
