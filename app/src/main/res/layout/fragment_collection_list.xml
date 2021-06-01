@@ -12,8 +12,28 @@
         android:layout_marginTop="@dimen/status_bar_height"
         android:clipToPadding="false"
         android:paddingBottom="?attr/actionBarSize"
+        android:visibility="gone"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/list_item_collection" />
+        tools:listitem="@layout/list_item_collection"
+        tools:visibility="visible" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/list_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        app:indicatorColor="@color/primary_inverse"
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/no_collections_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="?attr/actionBarSize"
+        android:text="@string/no_collection_message"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/scrim"

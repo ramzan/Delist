@@ -23,7 +23,7 @@ class CollectionListViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    val collections = MutableStateFlow<List<CollectionDisplayData>>(emptyList())
+    val state = MutableStateFlow<ListState>(ListState.Loading)
 
     init {
         getCollections()
@@ -45,11 +45,16 @@ class CollectionListViewModel @Inject constructor(
                 }
                 else -> throw Exception("Illegal order: $order")
             }.collect { list ->
-                collections.emit(
-                    if (prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, false)) {
-                        list.filter { !it.archived }
-                    } else list
+                val filteredList = if (prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, false)) {
+                    list.filter { !it.archived }
+                } else list
+
+                state.emit(
+                    if (filteredList.isEmpty()) ListState.NoCollections else ListState.Loaded(
+                        filteredList
+                    )
                 )
+
             }
         }
     }
@@ -67,13 +72,19 @@ class CollectionListViewModel @Inject constructor(
     }
 
     fun moveItem(fromPos: Int, toPos: Int) {
-        collections.value.run {
+        (state.value as? ListState.Loaded)?.run {
             CoroutineScope(Dispatchers.IO).launch {
                 dao.updateCollectionsOrder(
-                    collections.value[fromPos].id,
-                    collections.value[toPos].id
+                    collections[fromPos].id,
+                    collections[toPos].id
                 )
             }
         }
     }
+}
+
+sealed class ListState {
+    object Loading : ListState()
+    object NoCollections : ListState()
+    data class Loaded(val collections: List<CollectionDisplayData>) : ListState()
 }

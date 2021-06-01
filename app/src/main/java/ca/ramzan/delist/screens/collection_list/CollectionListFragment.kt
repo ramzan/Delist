@@ -83,18 +83,34 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         )
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.collections.collect { list ->
-                adapter.submitList(list.map {
-                    CollectionDisplay(
-                        it.id,
-                        it.name,
-                        typeToColor(resources, it.color),
-                        it.task
-                    )
-                })
+            viewModel.state.collect { state ->
+                when (state) {
+                    is ListState.Loading -> {
+                        binding.listProgressBar.visibility = View.VISIBLE
+                        binding.noCollectionsMessage.visibility = View.GONE
+                        binding.collectionList.visibility = View.GONE
+                    }
+                    is ListState.NoCollections -> {
+                        binding.listProgressBar.visibility = View.GONE
+                        binding.noCollectionsMessage.visibility = View.VISIBLE
+                        binding.collectionList.visibility = View.GONE
+                    }
+                    is ListState.Loaded -> {
+                        adapter.submitList(state.collections.map {
+                            CollectionDisplay(
+                                it.id,
+                                it.name,
+                                typeToColor(resources, it.color),
+                                it.task
+                            )
+                        })
+                        binding.listProgressBar.visibility = View.GONE
+                        binding.noCollectionsMessage.visibility = View.GONE
+                        binding.collectionList.visibility = View.VISIBLE
+                    }
+                }
             }
         }
-
         return binding.root
     }
 
