@@ -4,33 +4,32 @@
 
     <item
         android:id="@+id/sort"
-        android:contentDescription="Sort"
+        android:contentDescription="@string/sort"
         android:icon="@drawable/ic_baseline_sort_24"
-        android:title="Sort"
+        android:title="@string/sort"
         app:showAsAction="ifRoom">
 
         <menu>
-            <item
-                android:id="@+id/manual_sort"
-                android:contentDescription="Manual"
-                android:title="Manual"
-                app:showAsAction="never"></item>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/manual_sort"
+                    android:contentDescription="Manual"
+                    android:title="Manual"
+                    app:showAsAction="never" />
 
-            <item
-                android:id="@+id/alpha_asc_sort"
-                android:contentDescription="A -> Z"
-                android:title="A -> Z"
-                app:showAsAction="never"></item>
+                <item
+                    android:id="@+id/alpha_asc_sort"
+                    android:contentDescription="A -> Z"
+                    android:title="A -> Z"
+                    app:showAsAction="never" />
 
-            <item
-                android:id="@+id/alpha_desc_sort"
-                android:contentDescription="Z -> A"
-                android:title="Z -> A"
-                app:showAsAction="never"></item>
+                <item
+                    android:id="@+id/alpha_desc_sort"
+                    android:contentDescription="Z -> A"
+                    android:title="Z -> A"
+                    app:showAsAction="never" />
+            </group>
         </menu>
-
-
     </item>
-
 </menu>
 

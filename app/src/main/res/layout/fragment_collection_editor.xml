@@ -99,22 +99,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/type_stack"
-                    app:buttonTint="@color/primary_inverse"
                     tools:checked="true" />
 
                 <RadioButton
                     android:id="@+id/choice_queue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/type_queue"
-                    app:buttonTint="@color/primary_inverse" />
+                    android:text="@string/type_queue" />
 
                 <RadioButton
                     android:id="@+id/choice_randomizer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/type_randomizer"
-                    app:buttonTint="@color/primary_inverse" />
+                    android:text="@string/type_randomizer" />
 
             </RadioGroup>
 

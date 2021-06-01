@@ -127,7 +127,18 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
             val fab = findViewById<FloatingActionButton>(R.id.fab) ?: return
             bottomBar.apply {
                 visibility = View.VISIBLE
+                prefs.getString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_MANUAL).run {
+                    when (this) {
+                        PREF_COLLECTION_ORDER_MANUAL -> menu.findItem(R.id.manual_sort).isChecked =
+                            true
+                        PREF_COLLECTION_ORDER_ASC -> menu.findItem(R.id.alpha_asc_sort).isChecked =
+                            true
+                        PREF_COLLECTION_ORDER_DESC -> menu.findItem(R.id.alpha_desc_sort).isChecked =
+                            true
+                    }
+                }
                 setOnMenuItemClickListener {
+                    it.isChecked = true
                     when (it.itemId) {
                         R.id.manual_sort -> {
                             prefs.edit {

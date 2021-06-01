@@ -22,6 +22,7 @@
     <string name="delete">Delete</string>
     <string name="delete_completed_dialog_title">Delete completed tasks?</string>
     <string name="collection_type_selector_header_title">Task order</string>
+    <string name="sort">Sort</string>
 
     <string-array name="collection_type_array">
         <item>@string/type_queue</item>
