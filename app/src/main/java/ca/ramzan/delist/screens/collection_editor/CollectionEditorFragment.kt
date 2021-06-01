@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.IdRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
@@ -74,14 +75,6 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
                 true
             }
 
-            typeSelector.setAdapter(
-                NoFilterAdapter(
-                    requireContext(),
-                    R.layout.list_item_type_selector,
-                    resources.getStringArray(R.array.collection_type_array)
-                )
-            )
-
             colorButton.setOnClickListener {
                 findNavController().safeNavigate(CollectionEditorFragmentDirections.actionCollectionEditorFragmentToColorPickerDialogFragment())
             }
@@ -103,11 +96,9 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
                                 state.nameInputText = text.toString()
                             }
 
-                            typeSelector.setText(getCollectionTypeName(state.collectionType), false)
-
-                            typeSelector.setOnItemClickListener { _, _, _, _ ->
-                                state.collectionType =
-                                    getCollectionType(typeSelector.text.toString())
+                            typeRadioGroup.check(getCollectionRadioId(state.collectionType))
+                            typeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+                                state.collectionType = getCollectionType(checkedId)
                             }
 
                             typeToColor(resources, state.color).let { color ->
@@ -148,19 +139,19 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
         )
     }
 
-    private fun getCollectionTypeName(type: CollectionType): String {
+    private fun getCollectionRadioId(type: CollectionType): Int {
         return when (type) {
-            CollectionType.QUEUE -> getString(R.string.type_queue)
-            CollectionType.STACK -> getString(R.string.type_stack)
-            CollectionType.RANDOMIZER -> getString(R.string.type_randomizer)
+            CollectionType.QUEUE -> R.id.choice_queue
+            CollectionType.STACK -> R.id.choice_stack
+            CollectionType.RANDOMIZER -> R.id.choice_randomizer
         }
     }
 
-    private fun getCollectionType(type: String): CollectionType {
-        return when (type) {
-            getString(R.string.type_queue) -> CollectionType.QUEUE
-            getString(R.string.type_stack) -> CollectionType.STACK
-            getString(R.string.type_randomizer) -> CollectionType.RANDOMIZER
+    private fun getCollectionType(@IdRes id: Int): CollectionType {
+        return when (id) {
+            R.id.choice_queue -> CollectionType.QUEUE
+            R.id.choice_stack -> CollectionType.STACK
+            R.id.choice_randomizer -> CollectionType.RANDOMIZER
             else -> throw Exception("Illegal type selection: type")
         }
     }

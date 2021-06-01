@@ -51,7 +51,7 @@
                 android:paddingVertical="@dimen/defaultPadding"
                 app:colorControlActivated="@color/primary_inverse"
                 app:hintTextColor="@color/primary_inverse"
-                app:layout_constraintBottom_toTopOf="@id/type_selector_container"
+                app:layout_constraintBottom_toTopOf="@id/task_order_header"
                 app:layout_constraintEnd_toStartOf="@id/color_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -76,25 +76,47 @@
                 app:layout_constraintStart_toEndOf="@id/name_input_layout"
                 app:layout_constraintTop_toTopOf="@id/name_input_layout" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/type_selector_container"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            <TextView
+                android:id="@+id/task_order_header"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/collection_type_selector_header_title"
+                app:layout_constraintBottom_toTopOf="@id/type_radio_group"
+                app:layout_constraintTop_toBottomOf="@id/name_input_layout" />
+
+            <RadioGroup
+                android:id="@+id/type_radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/defaultPadding"
-                app:endIconTint="@color/primary_inverse"
                 app:hintTextColor="@color/primary_inverse"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/name_input_layout">
+                app:layout_constraintTop_toBottomOf="@id/task_order_header">
 
-                <AutoCompleteTextView
-                    android:id="@+id/type_selector"
+                <RadioButton
+                    android:id="@+id/choice_stack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/collection_type_input_hint"
-                    android:inputType="none" />
+                    android:text="@string/type_stack"
+                    app:buttonTint="@color/primary_inverse"
+                    tools:checked="true" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <RadioButton
+                    android:id="@+id/choice_queue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/type_queue"
+                    app:buttonTint="@color/primary_inverse" />
+
+                <RadioButton
+                    android:id="@+id/choice_randomizer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/type_randomizer"
+                    app:buttonTint="@color/primary_inverse" />
+
+            </RadioGroup>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
