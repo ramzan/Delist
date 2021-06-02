@@ -13,6 +13,7 @@
     <TextView
         android:id="@+id/collection_name"
         style="@style/TextAppearance.MaterialComponents.Overline"
+        android:maxLines="3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/defaultPadding"
