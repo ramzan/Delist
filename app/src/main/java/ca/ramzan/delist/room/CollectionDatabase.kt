@@ -3,6 +3,7 @@ package ca.ramzan.delist.room
 import android.content.Context
 import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteDatabaseCorruptException
 import android.net.Uri
 import android.util.Log
 import androidx.room.Database
@@ -62,12 +63,13 @@ abstract class CollectionDatabase : RoomDatabase() {
             context.contentResolver.openInputStream(uri)?.use { stream ->
                 if (!isSQLite3File(stream)) {
                     Log.d(TAG, "Invalid header")
+                    Log.d(TAG, "Import cancelled")
                     return
                 }
             }
             context.contentResolver.openInputStream(uri)?.use { stream ->
                 if (!isSchemaValid(context, stream)) {
-                    Log.d(TAG, "Invalid schema")
+                    Log.d(TAG, "Import cancelled")
                     return
                 }
             }
@@ -90,15 +92,21 @@ abstract class CollectionDatabase : RoomDatabase() {
         private fun isSchemaValid(context: Context, fis: InputStream): Boolean {
             val temp = File.createTempFile("import", "db", context.cacheDir)
             fis.copyTo(temp.outputStream())
+            val db: SQLiteDatabase
 
-            val db = SQLiteDatabase.openDatabase(
-                temp.absolutePath,
-                null,
-                SQLiteDatabase.OPEN_READONLY
-            )
+            try {
+                db = SQLiteDatabase.openDatabase(
+                    temp.absolutePath,
+                    null,
+                    SQLiteDatabase.OPEN_READONLY
+                )
+            } catch (e: SQLiteDatabaseCorruptException) {
+                Log.d(TAG, "Database corrupt")
+                temp.delete()
+                return false
+            }
 
             val valid = run {
-
                 if (db.version > DB_VERSION) {
                     return@run false
                 }
