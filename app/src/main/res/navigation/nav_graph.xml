@@ -27,6 +27,13 @@
         <action
             android:id="@+id/action_collectionListFragment_to_themeSelectorDialog"
             app:destination="@id/themeSelectorDialog" />
+        <action
+            android:id="@+id/action_collectionListFragment_to_backupRestoreFragment"
+            app:destination="@id/backupRestoreFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popEnterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_bottom" />
     </fragment>
     <fragment
         android:id="@+id/collectionDetailFragment"
@@ -100,4 +107,8 @@
         android:id="@+id/themeSelectorDialog"
         android:name="ca.ramzan.delist.screens.dialogs.ThemeSelectorDialog"
         android:label="ThemeSelectorDialog" />
+    <fragment
+        android:id="@+id/backupRestoreFragment"
+        android:name="ca.ramzan.delist.screens.backup_restore.BackupRestoreFragment"
+        android:label="BackupRestoreFragment" />
 </navigation>

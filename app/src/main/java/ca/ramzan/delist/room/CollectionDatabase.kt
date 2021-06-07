@@ -58,19 +58,19 @@ abstract class CollectionDatabase : RoomDatabase() {
             }
         }
 
-        fun copyFrom(context: Context, uri: Uri) {
+        fun copyFrom(context: Context, uri: Uri): Boolean {
             Log.d(TAG, "Starting import")
             context.contentResolver.openInputStream(uri)?.use { stream ->
                 if (!isSQLite3File(stream)) {
                     Log.d(TAG, "Invalid header")
                     Log.d(TAG, "Import cancelled")
-                    return
+                    return false
                 }
             }
             context.contentResolver.openInputStream(uri)?.use { stream ->
                 if (!isSchemaValid(context, stream)) {
                     Log.d(TAG, "Import cancelled")
-                    return
+                    return false
                 }
             }
             INSTANCE?.close()
@@ -81,6 +81,7 @@ abstract class CollectionDatabase : RoomDatabase() {
                 stream.copyTo(dbFile.outputStream())
             }
             Log.d(TAG, "Import complete")
+            return true
         }
 
         private fun isSQLite3File(fis: InputStream): Boolean {

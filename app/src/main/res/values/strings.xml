@@ -45,5 +45,7 @@
         <item>@string/dark</item>
         <item>@string/system</item>
     </string-array>
+    <string name="import_db_error_message">File not recognized</string>
+    <string name="import_db_success_message">Import successful</string>
 
 </resources>
