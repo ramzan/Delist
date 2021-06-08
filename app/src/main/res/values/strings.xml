@@ -52,5 +52,6 @@
     <string name="sort_a_to_z">A to Z</string>
     <string name="sort_z_to_a">Z to A</string>
     <string name="sort_manually">Manually</string>
+    <string name="backup_and_restore">Backup &amp; Restore</string>
 
 </resources>

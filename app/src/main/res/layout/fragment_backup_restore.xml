@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-            app:title="Backup/Restore">
+            app:title="@string/backup_and_restore">
 
         </com.google.android.material.appbar.MaterialToolbar>
 

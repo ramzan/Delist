@@ -16,5 +16,5 @@
         android:id="@+id/import_export"
         android:checkable="false"
         android:icon="@drawable/ic_baseline_info_24"
-        android:title="Backup/Restore" />
+        android:title="@string/backup_and_restore" />
 </menu>
