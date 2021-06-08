@@ -47,5 +47,10 @@
     </string-array>
     <string name="import_db_error_message">File not recognized</string>
     <string name="import_db_success_message">Import successful</string>
+    <string name="sort_and_filter"><![CDATA[Sort & filter]]></string>
+    <string name="hide_archived">Hide archived</string>
+    <string name="sort_a_to_z">A to Z</string>
+    <string name="sort_z_to_a">Z to A</string>
+    <string name="sort_manually">Manually</string>
 
 </resources>

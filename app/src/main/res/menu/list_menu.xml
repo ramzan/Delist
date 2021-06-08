@@ -5,17 +5,17 @@
 
     <item
         android:id="@+id/sort_filter_menu"
-        android:contentDescription="Sort/filter"
+        android:contentDescription="@string/sort_and_filter"
         android:icon="@drawable/ic_baseline_filter_list_24"
-        android:title="Sort/filter"
+        android:title="@string/sort_and_filter"
         app:showAsAction="ifRoom">
 
         <menu>
             <item
                 android:id="@+id/hide_archived"
                 android:checkable="true"
-                android:contentDescription="Hide archived"
-                android:title="Hide archived"
+                android:contentDescription="@string/hide_archived"
+                android:title="@string/hide_archived"
                 app:showAsAction="never" />
 
             <item
@@ -28,20 +28,20 @@
                     <group android:checkableBehavior="single">
                         <item
                             android:id="@+id/manual_sort"
-                            android:contentDescription="Manual"
-                            android:title="Manual"
+                            android:contentDescription="@string/sort_manually"
+                            android:title="@string/sort_manually"
                             app:showAsAction="never" />
 
                         <item
                             android:id="@+id/alpha_asc_sort"
-                            android:contentDescription="A -> Z"
-                            android:title="A -> Z"
+                            android:contentDescription="@string/sort_a_to_z"
+                            android:title="@string/sort_a_to_z"
                             app:showAsAction="never" />
 
                         <item
                             android:id="@+id/alpha_desc_sort"
-                            android:contentDescription="Z -> A"
-                            android:title="Z -> A"
+                            android:contentDescription="@string/sort_z_to_a"
+                            android:title="@string/sort_z_to_a"
                             app:showAsAction="never" />
                     </group>
                 </menu>
