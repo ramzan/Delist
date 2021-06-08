@@ -256,6 +256,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 show()
             }
             if (intent.getBooleanExtra(IMPORT_SUCCESS, false)) {
+                intent.removeExtra(IMPORT_SUCCESS)
                 Snackbar.make(
                     requireView(),
                     getString(R.string.import_db_success_message),
