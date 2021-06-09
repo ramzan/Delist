@@ -24,8 +24,6 @@ import ca.ramzan.delist.room.CollectionType
 import ca.ramzan.delist.screens.BaseFragment
 import ca.ramzan.delist.screens.color_picker.COLOR
 import ca.ramzan.delist.screens.color_picker.COLOR_PICKER_RESULT
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -45,7 +43,6 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
 
     override fun onStart() {
         super.onStart()
-        setUpBottomBar()
         setFragmentResultListener(COLOR_PICKER_RESULT) { _, bundle ->
             bundle.getInt(COLOR).let { color ->
                 viewModel.updateColor(colorToType(resources, color))
@@ -153,13 +150,6 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
             R.id.choice_stack -> CollectionType.STACK
             R.id.choice_randomizer -> CollectionType.RANDOMIZER
             else -> throw Exception("Illegal type selection: type")
-        }
-    }
-
-    private fun setUpBottomBar() {
-        requireActivity().run {
-            findViewById<FloatingActionButton>(R.id.fab)?.hide()
-            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.visibility = View.INVISIBLE
         }
     }
 }

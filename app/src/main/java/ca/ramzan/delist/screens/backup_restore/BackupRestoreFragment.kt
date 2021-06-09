@@ -15,8 +15,6 @@ import ca.ramzan.delist.common.MainActivity
 import ca.ramzan.delist.databinding.FragmentBackupRestoreBinding
 import ca.ramzan.delist.room.DB_NAME
 import ca.ramzan.delist.screens.BaseFragment
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import java.io.File
@@ -105,17 +103,5 @@ class BackupRestoreFragment : BaseFragment<FragmentBackupRestoreBinding>() {
         }
 
         return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
-        setUpBottomBar()
-    }
-
-    private fun setUpBottomBar() {
-        requireActivity().run {
-            findViewById<FloatingActionButton>(R.id.fab)?.hide()
-            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.visibility = View.INVISIBLE
-        }
     }
 }

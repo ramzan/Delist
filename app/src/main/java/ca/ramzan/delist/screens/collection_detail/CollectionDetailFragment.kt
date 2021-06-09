@@ -15,8 +15,6 @@ import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionDetailBinding
 import ca.ramzan.delist.screens.BaseFragment
 import ca.ramzan.delist.screens.dialogs.CONFIRMATION_RESULT
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -40,7 +38,6 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
 
     override fun onStart() {
         super.onStart()
-        setUpBottomBar()
         setFragmentResultListener(TASK_INPUT_RESULT) { _, bundle ->
             bundle.getString(TASK_INPUT_TEXT)?.let {
                 viewModel.addTasks(it)
@@ -191,12 +188,5 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         findNavController().safeNavigate(
             CollectionDetailFragmentDirections.actionCollectionDetailFragmentToTaskInputDialogFragment()
         )
-    }
-
-    private fun setUpBottomBar() {
-        requireActivity().run {
-            findViewById<FloatingActionButton>(R.id.fab)?.hide()
-            findViewById<BottomAppBar>(R.id.bottom_app_bar)?.visibility = View.INVISIBLE
-        }
     }
 }

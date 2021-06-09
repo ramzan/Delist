@@ -48,6 +48,25 @@
         android:paddingVertical="@dimen/defaultPadding"
         app:behavior_hideable="true"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        app:menu="@menu/nav_drawer" />
+        app:menu="@menu/nav_drawer"
+        tools:visibility="gone" />
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_app_bar"
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/list_menu"
+        app:navigationIcon="@drawable/ic_baseline_menu_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/new_collection_button_description"
+        app:layout_anchor="@id/bottom_app_bar"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

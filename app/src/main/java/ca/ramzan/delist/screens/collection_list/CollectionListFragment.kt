@@ -28,11 +28,13 @@ import ca.ramzan.delist.screens.BaseFragment
 import ca.ramzan.delist.screens.backup_restore.IMPORT_SUCCESS
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.math.MathUtils.lerp
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 const val PREF_COLLECTION_HIDE_ARCHIVED = "PREF_COLLECTION_HIDE_ARCHIVED"
@@ -51,15 +53,21 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
     private var itemTouchHelper: ItemTouchHelper? = null
 
-    override fun onStart() {
-        super.onStart()
-        setUpBottomBar()
-    }
-
-    override fun onStop() {
-        requireActivity().findViewById<BottomAppBar>(R.id.bottom_app_bar)
-            ?.setNavigationOnClickListener(null)
-        super.onStop()
+    override fun onResume() {
+        super.onResume()
+        CoroutineScope(Dispatchers.Default).launch {
+            // For some reason, running this on the main thread causes the snackbar to
+            // overlap with the bottom bar
+            if (requireActivity().intent.getBooleanExtra(IMPORT_SUCCESS, false)) {
+                requireActivity().intent.removeExtra(IMPORT_SUCCESS)
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.import_db_success_message),
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(binding.fab)
+                    .show()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -67,6 +75,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         savedInstanceState: Bundle?
     ): View {
         mutableBinding = FragmentCollectionListBinding.inflate(inflater)
+        setUpBottomBar()
 
         val adapter = CollectionAdapter(
             ::goToCollection,
@@ -141,15 +150,12 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
             }
             // setAnchorView causes a memory leak
             // https://github.com/material-components/material-components-android/issues/2042
-            .setAnchorView(requireActivity().findViewById<FloatingActionButton>(R.id.fab))
+            .setAnchorView(binding.fab)
             .show()
     }
 
     private fun setUpBottomBar() {
-        val bottomBar = requireActivity().findViewById<BottomAppBar>(R.id.bottom_app_bar) ?: return
-        val fab = requireActivity().findViewById<FloatingActionButton>(R.id.fab) ?: return
-        bottomBar.apply {
-            visibility = View.VISIBLE
+        binding.bottomAppBar.apply {
             prefs.getString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_MANUAL).run {
                 when (this) {
                     PREF_COLLECTION_ORDER_MANUAL -> menu.findItem(R.id.manual_sort).isChecked =
@@ -239,38 +245,18 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                 }
 
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    when (newState) {
-                        BottomSheetBehavior.STATE_HIDDEN -> {
-                            binding.scrim.visibility = View.GONE
-                            bottomBar.visibility = View.VISIBLE
-                            fab.show()
-                        }
-                        else -> {
-                            binding.scrim.visibility = View.VISIBLE
-                            bottomBar.visibility = View.GONE
-                            fab.hide()
-                        }
+                    binding.scrim.visibility = when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> View.GONE
+                        else -> View.VISIBLE
                     }
                 }
             })
         }
-        fab.apply {
-            setImageResource(R.drawable.ic_baseline_add_24)
-            setOnClickListener {
-                findNavController().safeNavigate(
-                    CollectionListFragmentDirections.actionCollectionListFragmentToCollectionEditorFragment()
-                )
-            }
-            show()
-        }
-        if (requireActivity().intent.getBooleanExtra(IMPORT_SUCCESS, false)) {
-            requireActivity().intent.removeExtra(IMPORT_SUCCESS)
-            Snackbar.make(
-                requireView(),
-                getString(R.string.import_db_success_message),
-                Snackbar.LENGTH_SHORT
-            ).setAnchorView(fab)
-                .show()
+
+        binding.fab.setOnClickListener {
+            findNavController().safeNavigate(
+                CollectionListFragmentDirections.actionCollectionListFragmentToCollectionEditorFragment()
+            )
         }
     }
 
