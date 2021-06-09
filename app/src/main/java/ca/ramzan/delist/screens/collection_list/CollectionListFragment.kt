@@ -49,7 +49,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
     private val viewModel: CollectionListViewModel by viewModels()
 
-    private lateinit var itemTouchHelper: ItemTouchHelper
+    private var itemTouchHelper: ItemTouchHelper? = null
 
     override fun onStart() {
         super.onStart()
@@ -117,7 +117,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
     }
 
     override fun onDestroyView() {
-        itemTouchHelper.attachToRecyclerView(null)
+        itemTouchHelper = null
         super.onDestroyView()
     }
 
@@ -291,7 +291,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
     }
 
     private fun enableReordering(enable: Boolean) {
-        itemTouchHelper.attachToRecyclerView(if (enable) binding.collectionList else null)
+        itemTouchHelper?.attachToRecyclerView(if (enable) binding.collectionList else null)
     }
 
     private fun getItemTouchCallback(adapter: CollectionAdapter): ItemTouchHelper.SimpleCallback {
