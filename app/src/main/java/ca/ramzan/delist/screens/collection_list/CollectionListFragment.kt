@@ -16,7 +16,6 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_IDLE
@@ -55,6 +54,12 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
     override fun onStart() {
         super.onStart()
         setUpBottomBar()
+    }
+
+    override fun onStop() {
+        requireActivity().findViewById<BottomAppBar>(R.id.bottom_app_bar)
+            ?.setNavigationOnClickListener(null)
+        super.onStop()
     }
 
     override fun onCreateView(
@@ -141,134 +146,131 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
     }
 
     private fun setUpBottomBar() {
-        requireActivity().run {
-            val bottomBar = findViewById<BottomAppBar>(R.id.bottom_app_bar) ?: return
-            val fab = findViewById<FloatingActionButton>(R.id.fab) ?: return
-            bottomBar.apply {
-                visibility = View.VISIBLE
-                prefs.getString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_MANUAL).run {
-                    when (this) {
-                        PREF_COLLECTION_ORDER_MANUAL -> menu.findItem(R.id.manual_sort).isChecked =
-                            true
-                        PREF_COLLECTION_ORDER_ASC -> menu.findItem(R.id.alpha_asc_sort).isChecked =
-                            true
-                        PREF_COLLECTION_ORDER_DESC -> menu.findItem(R.id.alpha_desc_sort).isChecked =
-                            true
-                    }
+        val bottomBar = requireActivity().findViewById<BottomAppBar>(R.id.bottom_app_bar) ?: return
+        val fab = requireActivity().findViewById<FloatingActionButton>(R.id.fab) ?: return
+        bottomBar.apply {
+            visibility = View.VISIBLE
+            prefs.getString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_MANUAL).run {
+                when (this) {
+                    PREF_COLLECTION_ORDER_MANUAL -> menu.findItem(R.id.manual_sort).isChecked =
+                        true
+                    PREF_COLLECTION_ORDER_ASC -> menu.findItem(R.id.alpha_asc_sort).isChecked =
+                        true
+                    PREF_COLLECTION_ORDER_DESC -> menu.findItem(R.id.alpha_desc_sort).isChecked =
+                        true
                 }
+            }
 
-                menu.findItem(R.id.hide_archived).isChecked =
-                    prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, false)
+            menu.findItem(R.id.hide_archived).isChecked =
+                prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, false)
 
-                setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.hide_archived -> {
-                            it.isChecked = !it.isChecked
-                            prefs.edit {
-                                putBoolean(PREF_COLLECTION_HIDE_ARCHIVED, it.isChecked)
-                            }
-                            viewModel.getCollections()
-                            true
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.hide_archived -> {
+                        it.isChecked = !it.isChecked
+                        prefs.edit {
+                            putBoolean(PREF_COLLECTION_HIDE_ARCHIVED, it.isChecked)
                         }
-                        R.id.manual_sort -> {
-                            prefs.edit {
-                                putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_MANUAL)
-                            }
-                            viewModel.getCollections()
-                            enableReordering(true)
-                            it.isChecked = true
-                            true
-                        }
-                        R.id.alpha_asc_sort -> {
-                            prefs.edit {
-                                putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_ASC)
-                            }
-                            viewModel.getCollections()
-                            enableReordering(false)
-                            it.isChecked = true
-                            true
-                        }
-                        R.id.alpha_desc_sort -> {
-                            prefs.edit {
-                                putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_DESC)
-                            }
-                            viewModel.getCollections()
-                            enableReordering(false)
-                            it.isChecked = true
-                            true
-                        }
-                        else -> false
+                        viewModel.getCollections()
+                        true
                     }
+                    R.id.manual_sort -> {
+                        prefs.edit {
+                            putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_MANUAL)
+                        }
+                        viewModel.getCollections()
+                        enableReordering(true)
+                        it.isChecked = true
+                        true
+                    }
+                    R.id.alpha_asc_sort -> {
+                        prefs.edit {
+                            putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_ASC)
+                        }
+                        viewModel.getCollections()
+                        enableReordering(false)
+                        it.isChecked = true
+                        true
+                    }
+                    R.id.alpha_desc_sort -> {
+                        prefs.edit {
+                            putString(PREF_COLLECTION_ORDER_KEY, PREF_COLLECTION_ORDER_DESC)
+                        }
+                        viewModel.getCollections()
+                        enableReordering(false)
+                        it.isChecked = true
+                        true
+                    }
+                    else -> false
                 }
-                val bottomSheetBehavior = BottomSheetBehavior.from(binding.navView)
+            }
+            val bottomSheetBehavior = BottomSheetBehavior.from(binding.navView)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+            setNavigationOnClickListener {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+
+            binding.navView.setNavigationItemSelectedListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.about -> onAboutClicked()
+                    R.id.theme -> showThemeSelector()
+                    R.id.import_export -> goToBackupRestoreFragment()
+                }
+                true
+            }
+
+            binding.scrim.setOnClickListener {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
 
-                setNavigationOnClickListener {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetBehavior.addBottomSheetCallback(object :
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    val baseColor = Color.BLACK
+                    val baseAlpha =
+                        ResourcesCompat.getFloat(resources, R.dimen.material_emphasis_medium)
+                    // Map slideOffset from [-1.0, 1.0] to [0.0, 1.0]
+                    val offset = (slideOffset - (-1f)) / (1f - (-1f)) * (1f - 0f) + 0f
+                    val alpha = lerp(0f, 255f, offset * baseAlpha).toInt()
+                    val color =
+                        Color.argb(alpha, baseColor.red, baseColor.green, baseColor.blue)
+                    binding.scrim.setBackgroundColor(color)
                 }
 
-                binding.navView.setNavigationItemSelectedListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.about -> onAboutClicked()
-                        R.id.theme -> showThemeSelector()
-                        R.id.import_export -> goToBackupRestoreFragment()
-                    }
-//                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                    true
-                }
-
-                binding.scrim.setOnClickListener {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                }
-
-                bottomSheetBehavior.addBottomSheetCallback(object :
-                    BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                        val baseColor = Color.BLACK
-                        val baseAlpha =
-                            ResourcesCompat.getFloat(resources, R.dimen.material_emphasis_medium)
-                        // Map slideOffset from [-1.0, 1.0] to [0.0, 1.0]
-                        val offset = (slideOffset - (-1f)) / (1f - (-1f)) * (1f - 0f) + 0f
-                        val alpha = lerp(0f, 255f, offset * baseAlpha).toInt()
-                        val color =
-                            Color.argb(alpha, baseColor.red, baseColor.green, baseColor.blue)
-                        binding.scrim.setBackgroundColor(color)
-                    }
-
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        when (newState) {
-                            BottomSheetBehavior.STATE_HIDDEN -> {
-                                binding.scrim.visibility = View.GONE
-                                bottomBar.visibility = View.VISIBLE
-                                fab.show()
-                            }
-                            else -> {
-                                binding.scrim.visibility = View.VISIBLE
-                                bottomBar.visibility = View.GONE
-                                fab.hide()
-                            }
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.scrim.visibility = View.GONE
+                            bottomBar.visibility = View.VISIBLE
+                            fab.show()
+                        }
+                        else -> {
+                            binding.scrim.visibility = View.VISIBLE
+                            bottomBar.visibility = View.GONE
+                            fab.hide()
                         }
                     }
-                })
-            }
-            fab.apply {
-                setImageResource(R.drawable.ic_baseline_add_24)
-                setOnClickListener {
-                    findNavController(R.id.nav_host_fragment).safeNavigate(
-                        CollectionListFragmentDirections.actionCollectionListFragmentToCollectionEditorFragment()
-                    )
                 }
-                show()
+            })
+        }
+        fab.apply {
+            setImageResource(R.drawable.ic_baseline_add_24)
+            setOnClickListener {
+                findNavController().safeNavigate(
+                    CollectionListFragmentDirections.actionCollectionListFragmentToCollectionEditorFragment()
+                )
             }
-            if (intent.getBooleanExtra(IMPORT_SUCCESS, false)) {
-                intent.removeExtra(IMPORT_SUCCESS)
-                Snackbar.make(
-                    requireView(),
-                    getString(R.string.import_db_success_message),
-                    Snackbar.LENGTH_SHORT
-                ).setAnchorView(fab)
-                    .show()
-            }
+            show()
+        }
+        if (requireActivity().intent.getBooleanExtra(IMPORT_SUCCESS, false)) {
+            requireActivity().intent.removeExtra(IMPORT_SUCCESS)
+            Snackbar.make(
+                requireView(),
+                getString(R.string.import_db_success_message),
+                Snackbar.LENGTH_SHORT
+            ).setAnchorView(fab)
+                .show()
         }
     }
 
