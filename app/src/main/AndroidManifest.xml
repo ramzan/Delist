@@ -12,6 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Delist"
         tools:ignore="AllowBackup">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="ca.ramzan.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity android:name=".common.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

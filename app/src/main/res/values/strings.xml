@@ -53,5 +53,6 @@
     <string name="sort_z_to_a">Z to A</string>
     <string name="sort_manually">Manually</string>
     <string name="backup_and_restore">Backup &amp; Restore</string>
+    <string name="export_sharesheet_title">Share with</string>
 
 </resources>
