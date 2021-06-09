@@ -111,6 +111,11 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        itemTouchHelper.attachToRecyclerView(null)
+        super.onDestroyView()
+    }
+
     private fun goToCollection(collectionId: Long) {
         findNavController().safeNavigate(
             CollectionListFragmentDirections.actionCollectionListFragmentToCollectionDetailFragment(
