@@ -56,5 +56,9 @@
     <string name="export_sharesheet_title">Share with</string>
     <string name="rearrange_hint">Tip: press and hold, then drag a collection to rearrange.</string>
     <string name="ok">OK</string>
+    <string name="completed_deleted_message">Completed tasks deleted</string>
+    <string name="collection_archived_message">Collection archived</string>
+    <string name="collection_unarchived_message">Collection unarchived</string>
+    <string name="collection_deleted_message">Collection deleted</string>
 
 </resources>

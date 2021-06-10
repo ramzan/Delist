@@ -34,6 +34,10 @@
             app:exitAnim="@anim/slide_out_bottom"
             app:popEnterAnim="@anim/slide_in_bottom"
             app:popExitAnim="@anim/slide_out_bottom" />
+        <argument
+            android:name="collectionDeleted"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/collectionDetailFragment"
@@ -56,6 +60,15 @@
         <action
             android:id="@+id/action_collectionDetailFragment_to_confirmationDialog"
             app:destination="@id/confirmationDialog" />
+        <action
+            android:id="@+id/action_collectionDetailFragment_to_collectionListFragment"
+            app:destination="@id/collectionListFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/collectionListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/collectionEditorFragment"

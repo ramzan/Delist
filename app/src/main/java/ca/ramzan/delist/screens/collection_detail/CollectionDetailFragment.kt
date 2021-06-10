@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import ca.ramzan.delist.R
 import ca.ramzan.delist.common.safeNavigate
@@ -48,6 +47,11 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                 viewModel.deleteCollection()
             } else if (bundle.getBoolean(KEY_COMPLETED_DELETED, false)) {
                 viewModel.clearCompleted()
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.completed_deleted_message),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -82,10 +86,7 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
                 when (state) {
-                    DetailState.Deleted -> findNavController().popBackStack(
-                        R.id.collectionListFragment,
-                        false
-                    )
+                    DetailState.Deleted -> goBackDeleted()
                     is DetailState.Loaded -> {
                         binding.detailToolbar.apply {
                             title = state.collection.name
@@ -107,10 +108,20 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                                 when (menuItem.itemId) {
                                     R.id.archive -> {
                                         viewModel.archiveCollection(true)
+                                        Snackbar.make(
+                                            binding.root,
+                                            context.getString(R.string.collection_archived_message),
+                                            Snackbar.LENGTH_SHORT
+                                        ).show()
                                         true
                                     }
                                     R.id.unarchive -> {
                                         viewModel.archiveCollection(false)
+                                        Snackbar.make(
+                                            binding.root,
+                                            context.getString(R.string.collection_unarchived_message),
+                                            Snackbar.LENGTH_SHORT
+                                        ).show()
                                         true
                                     }
                                     R.id.delete_collection -> {
@@ -139,14 +150,6 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             adapter.submitWithCompleted(state.collection.task, state.completedTasks)
                         }
 
-//                        binding.completedTaskListHeader.text = resources.getQuantityString(
-//                            R.plurals.n_completed_tasks,
-//                            state.completedTasks.size,
-//                            state.completedTasks.size
-//                        )
-//                        binding.completedTaskGroup.visibility =
-//                            if (state.completedTasks.isEmpty()) View.GONE else View.VISIBLE
-
                         binding.detailProgressBar.visibility = View.GONE
                         binding.completedTaskList.visibility = View.VISIBLE
                     }
@@ -159,6 +162,13 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         }
 
         return binding.root
+    }
+
+    private fun goBackDeleted() {
+        findNavController().safeNavigate(
+            CollectionDetailFragmentDirections.actionCollectionDetailFragmentToCollectionListFragment()
+                .apply { collectionDeleted = true }
+        )
     }
 
     private fun showDeleteCollectionDialog() {

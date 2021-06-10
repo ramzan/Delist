@@ -66,6 +66,13 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                     Snackbar.LENGTH_SHORT
                 ).setAnchorView(binding.fab)
                     .show()
+            } else if (requireArguments().getBoolean("collectionDeleted")) {
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.collection_deleted_message),
+                    Snackbar.LENGTH_SHORT
+                ).setAnchorView(binding.fab)
+                    .show()
             } else if (!prefs.getBoolean(PREF_REORDER_TIP_SHOWN, false)) {
                 (viewModel.state.value as? ListState.Loaded)?.run {
                     if (collections.size < 2) return@launch
