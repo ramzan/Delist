@@ -26,7 +26,6 @@ import ca.ramzan.delist.common.typeToColor
 import ca.ramzan.delist.databinding.FragmentCollectionListBinding
 import ca.ramzan.delist.screens.BaseFragment
 import ca.ramzan.delist.screens.backup_restore.IMPORT_SUCCESS
-import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.math.MathUtils.lerp
 import com.google.android.material.snackbar.Snackbar
@@ -42,6 +41,7 @@ const val PREF_COLLECTION_ORDER_KEY = "PREF_COLLECTION_ORDER_KEY"
 const val PREF_COLLECTION_ORDER_MANUAL = "PREF_COLLECTION_ORDER_MANUAL"
 const val PREF_COLLECTION_ORDER_ASC = "PREF_COLLECTION_ORDER_ASC"
 const val PREF_COLLECTION_ORDER_DESC = "PREF_COLLECTION_ORDER_DESC"
+const val PREF_REORDER_TIP_SHOWN = "PREF_REORDER_TIP_SHOWN"
 
 @AndroidEntryPoint
 class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
@@ -66,6 +66,19 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                     Snackbar.LENGTH_SHORT
                 ).setAnchorView(binding.fab)
                     .show()
+            } else if (!prefs.getBoolean(PREF_REORDER_TIP_SHOWN, false)) {
+                (viewModel.state.value as? ListState.Loaded)?.run {
+                    if (collections.size < 2) return@launch
+                    Snackbar.make(
+                        binding.root,
+                        getString(R.string.rearrange_hint),
+                        Snackbar.LENGTH_INDEFINITE
+                    ).setAction(getString(R.string.ok)) {
+                        prefs.edit { putBoolean(PREF_REORDER_TIP_SHOWN, true) }
+                    }
+                        .setAnchorView(binding.fab)
+                        .show()
+                }
             }
         }
     }

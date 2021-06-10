@@ -54,5 +54,7 @@
     <string name="sort_manually">Manually</string>
     <string name="backup_and_restore">Backup &amp; Restore</string>
     <string name="export_sharesheet_title">Share with</string>
+    <string name="rearrange_hint">Tip: press and hold, then drag a collection to rearrange.</string>
+    <string name="ok">OK</string>
 
 </resources>
