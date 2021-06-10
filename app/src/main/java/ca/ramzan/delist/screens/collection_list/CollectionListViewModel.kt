@@ -45,7 +45,7 @@ class CollectionListViewModel @Inject constructor(
                 }
                 else -> throw Exception("Illegal order: $order")
             }.collect { list ->
-                val filteredList = if (prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, false)) {
+                val filteredList = if (prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, true)) {
                     list.filter { !it.archived }
                 } else list
 
