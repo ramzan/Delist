@@ -10,6 +10,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/export"
+        android:contentDescription="Export"
+        android:title="Export"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/archive"
         android:contentDescription="Archive"
         android:title="Archive"

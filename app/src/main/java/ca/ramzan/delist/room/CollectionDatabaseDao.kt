@@ -222,5 +222,8 @@ interface CollectionDatabaseDao {
     fun archiveCollection(collectionId: Long, isArchived: Boolean) {
         saveCollection(getCollection(collectionId).copy(archived = isArchived))
     }
+
+    @Query("SELECT * FROM task_table WHERE collectionId = :collectionId")
+    suspend fun getAllTasks(collectionId: Long): List<Task>
     // endregion detail-----------------------------------------------------------------------------
 }

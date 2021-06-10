@@ -80,6 +80,10 @@ class CollectionDetailViewModel @AssistedInject constructor(
         }
     }
 
+    suspend fun exportList(): List<Task> {
+        return dao.getAllTasks(collectionId)
+    }
+
     // region Factory ------------------------------------------------------------------------------
 
     @AssistedFactory

@@ -1,9 +1,11 @@
 package ca.ramzan.delist.screens.collection_detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +18,11 @@ import ca.ramzan.delist.screens.BaseFragment
 import ca.ramzan.delist.screens.dialogs.CONFIRMATION_RESULT
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 const val KEY_COLLECTION_DELETED = "KEY_COLLECTION_DELETED"
@@ -137,6 +143,37 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                                             CollectionDetailFragmentDirections.actionCollectionDetailFragmentToCollectionEditorFragment()
                                                 .setCollectionId(requireArguments().getLong("collectionId"))
                                         )
+                                        true
+                                    }
+                                    R.id.export -> {
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            val exportFile = File(
+                                                requireContext().externalCacheDir,
+                                                "${state.collection.name}.txt"
+                                            )
+                                            exportFile.writeText("")
+                                            viewModel.exportList().forEach {
+                                                exportFile.appendText(
+                                                    "- [${if (it.timeCompleted == null) ' ' else 'x'}] ${it.content}\n"
+                                                )
+                                            }
+                                            val contentUri = FileProvider.getUriForFile(
+                                                requireContext(),
+                                                "ca.ramzan.fileprovider",
+                                                exportFile
+                                            )
+                                            val shareIntent: Intent = Intent().apply {
+                                                action = Intent.ACTION_SEND
+                                                putExtra(Intent.EXTRA_STREAM, contentUri)
+                                                type = "text/plain"
+                                            }
+                                            startActivity(
+                                                Intent.createChooser(
+                                                    shareIntent,
+                                                    getString(R.string.export_sharesheet_title)
+                                                )
+                                            )
+                                        }
                                         true
                                     }
                                     else -> false
