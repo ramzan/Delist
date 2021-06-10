@@ -73,6 +73,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                     Snackbar.LENGTH_SHORT
                 ).setAnchorView(binding.fab)
                     .show()
+                requireArguments().putBoolean("collectionDeleted", false)
             } else if (!prefs.getBoolean(PREF_REORDER_TIP_SHOWN, false)) {
                 (viewModel.state.value as? ListState.Loaded)?.run {
                     if (collections.size < 2) return@launch
