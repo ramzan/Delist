@@ -1,6 +1,7 @@
 package ca.ramzan.delist.screens.collection_list
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
@@ -41,6 +42,7 @@ class CollectionAdapter(
                 itemText.text = item.item
                 completeTaskButton.isEnabled = true
             }
+            archived.visibility = if (item.archived) View.VISIBLE else View.GONE
             itemText.text = item.item ?: noTasksMessage
             root.background.colorFilter =
                 BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
@@ -80,4 +82,10 @@ class CollectionDiffCallback : DiffUtil.ItemCallback<CollectionDisplay>() {
     }
 }
 
-class CollectionDisplay(val id: Long, val name: String, val color: Int, val item: String?)
+class CollectionDisplay(
+    val id: Long,
+    val name: String,
+    val color: Int,
+    val archived: Boolean,
+    val item: String?
+)

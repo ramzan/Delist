@@ -11,15 +11,29 @@
     android:padding="12dp">
 
     <TextView
-        android:id="@+id/collection_name"
-        style="@style/TextAppearance.MaterialComponents.Overline"
-        android:maxLines="3"
+        android:id="@+id/archived"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/defaultPadding"
+        android:maxLines="1"
+        android:text="@string/archived"
+        android:textStyle="bold"
+        android:paddingBottom="6dp"
         app:layout_constraintEnd_toStartOf="@id/complete_task_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/collection_name"
+        style="@style/TextAppearance.MaterialComponents.Overline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/defaultPadding"
+        android:maxLines="3"
+        app:layout_constraintEnd_toStartOf="@id/complete_task_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/archived"
         tools:text="Collection name" />
 
     <TextView

@@ -60,5 +60,6 @@
     <string name="collection_archived_message">Collection archived</string>
     <string name="collection_unarchived_message">Collection unarchived</string>
     <string name="collection_deleted_message">Collection deleted</string>
+    <string name="archived">Archived</string>
 
 </resources>

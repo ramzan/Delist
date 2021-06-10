@@ -132,6 +132,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
                                 it.id,
                                 it.name,
                                 typeToColor(resources, it.color),
+                                it.archived,
                                 it.task
                             )
                         })
@@ -188,7 +189,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
             }
 
             menu.findItem(R.id.hide_archived).isChecked =
-                prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, false)
+                prefs.getBoolean(PREF_COLLECTION_HIDE_ARCHIVED, true)
 
             setOnMenuItemClickListener {
                 when (it.itemId) {
