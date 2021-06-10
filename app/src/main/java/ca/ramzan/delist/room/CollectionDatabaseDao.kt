@@ -225,5 +225,8 @@ interface CollectionDatabaseDao {
 
     @Query("SELECT * FROM task_table WHERE collectionId = :collectionId")
     suspend fun getAllTasks(collectionId: Long): List<Task>
+
+    @Query("SELECT id, name FROM collection_table")
+    suspend fun getAllCollections(): List<CollectionExport>
     // endregion detail-----------------------------------------------------------------------------
 }

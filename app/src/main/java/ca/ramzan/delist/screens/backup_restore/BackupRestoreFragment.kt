@@ -16,16 +16,24 @@ import ca.ramzan.delist.databinding.FragmentBackupRestoreBinding
 import ca.ramzan.delist.room.DB_NAME
 import ca.ramzan.delist.screens.BaseFragment
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+import kotlin.collections.HashSet
 
 private const val DB_MIMETYPE = "application/octet-stream"
 const val IMPORT_SUCCESS = "IMPORT_SUCCESS"
 
+@AndroidEntryPoint
 class BackupRestoreFragment : BaseFragment<FragmentBackupRestoreBinding>() {
 
     private val viewModel: BackupRestoreViewModel by viewModels()
@@ -42,14 +50,40 @@ class BackupRestoreFragment : BaseFragment<FragmentBackupRestoreBinding>() {
         }
 
     private fun exportDb() {
-        val exportName = "Delist Backup $dateString.db"
-        val dbFile = File(requireContext().externalCacheDir, exportName)
-        requireContext().getDatabasePath(DB_NAME).inputStream().copyTo(dbFile.outputStream())
-        val contentUri = getUriForFile(requireContext(), "ca.ramzan.fileprovider", dbFile)
+        CoroutineScope(Dispatchers.IO).launch {
+            val dbFile = File(requireContext().externalCacheDir, "Delist Backup $dateString.db")
+            requireContext().getDatabasePath(DB_NAME).inputStream().copyTo(dbFile.outputStream())
+            shareFile(dbFile, DB_MIMETYPE)
+        }
+    }
+
+    private fun exportZip() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val zipFile = File(requireContext().externalCacheDir, "Delist Backup $dateString.zip")
+            val zos = ZipOutputStream(zipFile.outputStream())
+            val fileNames = HashSet<String>()
+            viewModel.getAllCollections().forEach { collection ->
+                var name = "${collection.name}.txt"
+                var i = 1
+                while (name in fileNames) name = "${collection.name} (${i++}).txt"
+                fileNames.add(name)
+                zos.putNextEntry(ZipEntry(name))
+                viewModel.getAllTasks(collection.id).forEach { task ->
+                    zos.write("- [${if (task.timeCompleted == null) ' ' else 'x'}] ${task.content}\n".toByteArray())
+                }
+                zos.closeEntry()
+            }
+            zos.finish()
+            shareFile(zipFile, "application/zip")
+        }
+    }
+
+    private fun shareFile(file: File, mimeType: String) {
+        val contentUri = getUriForFile(requireContext(), "ca.ramzan.fileprovider", file)
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, contentUri)
-            type = DB_MIMETYPE
+            type = mimeType
         }
         startActivity(
             Intent.createChooser(
@@ -73,7 +107,8 @@ class BackupRestoreFragment : BaseFragment<FragmentBackupRestoreBinding>() {
             )
         }
         binding.importButton.setOnClickListener { importDb.launch(arrayOf(DB_MIMETYPE)) }
-        binding.exportButton.setOnClickListener { exportDb() }
+        binding.exportDbButton.setOnClickListener { exportDb() }
+        binding.exportZipButton.setOnClickListener { exportZip() }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->

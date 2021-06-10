@@ -47,3 +47,8 @@ class CollectionDisplayData(
     val archived: Boolean,
     val task: String?
 )
+
+class CollectionExport(
+    val id: Long,
+    val name: String,
+)

@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/defaultPadding"
+        android:gravity="center"
         android:orientation="vertical"
         android:paddingTop="?actionBarSize">
 
@@ -32,13 +33,21 @@
             android:id="@+id/import_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/defaultPadding"
+            android:layout_marginBottom="@dimen/defaultPadding"
             android:text="@string/import_database" />
 
         <Button
-            android:id="@+id/export_button"
+            android:id="@+id/export_db_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/defaultPadding"
+
             android:text="@string/export_database" />
+
+        <Button
+            android:id="@+id/export_zip_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/export_zip" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
