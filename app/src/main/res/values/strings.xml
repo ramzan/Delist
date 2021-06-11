@@ -64,5 +64,7 @@
     <string name="export_zip">Export ZIP</string>
     <string name="tasks_added_message">Tasks added to collection</string>
     <string name="task_input_hint">New tasks</string>
+    <string name="task_input_dialog_title">Add tasks</string>
+    <string name="add">Add</string>
 
 </resources>

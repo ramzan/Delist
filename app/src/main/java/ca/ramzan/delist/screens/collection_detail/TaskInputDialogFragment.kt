@@ -20,14 +20,14 @@ class TaskInputDialogFragment : DialogFragment() {
         val input = layout.findViewById<EditText>(R.id.new_task_input)
 
         return MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-            .setTitle("Add tasks")
-            .setPositiveButton("Add") { _, _ ->
+            .setTitle(getString(R.string.task_input_dialog_title))
+            .setPositiveButton(getString(R.string.add)) { _, _ ->
                 setFragmentResult(
                     TASK_INPUT_RESULT,
                     bundleOf(TASK_INPUT_TEXT to input.text.toString())
                 )
             }
-            .setNegativeButton("Cancel") { _, _ ->
+            .setNegativeButton(getString(R.string.dialog_negative_button_label)) { _, _ ->
                 /* no-op */
             }
             .setView(layout)
