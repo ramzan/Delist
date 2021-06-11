@@ -24,30 +24,71 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/defaultPadding"
-        android:gravity="center"
         android:orientation="vertical"
         android:paddingTop="?actionBarSize">
 
-        <Button
-            android:id="@+id/import_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/defaultPadding"
-            android:text="@string/import_database" />
-
-        <Button
+        <LinearLayout
             android:id="@+id/export_db_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/defaultPadding"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/defaultPadding"
+            android:paddingVertical="12dp">
 
-            android:text="@string/export_database" />
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_database" />
 
-        <Button
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_database_description" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/import_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/defaultPadding"
+            android:paddingVertical="12dp">
+
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/import_database" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/import_database_description" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/export_zip_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/export_zip" />
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/defaultPadding"
+            android:paddingVertical="12dp">
+
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_zip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_zip_description" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

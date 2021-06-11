@@ -14,8 +14,8 @@
     <string name="complete_task_message">Task completed</string>
     <string name="collection_color_button_description">Choose collection color</string>
     <string name="about">About</string>
-    <string name="import_database">Import database</string>
-    <string name="export_database">Export database</string>
+    <string name="import_database">Import backup</string>
+    <string name="export_database">Export backup</string>
     <string name="dialog_negative_button_label">Cancel</string>
     <string name="delete_collection_dialog_title">Delete collection?</string>
     <string name="message_action_cannot_be_undone">This action cannot be undone.</string>
@@ -61,10 +61,13 @@
     <string name="collection_unarchived_message">Collection unarchived</string>
     <string name="collection_deleted_message">Collection deleted</string>
     <string name="archived">Archived</string>
-    <string name="export_zip">Export ZIP</string>
+    <string name="export_zip">Export as text</string>
     <string name="tasks_added_message">Tasks added to collection</string>
     <string name="task_input_hint">New tasks</string>
     <string name="task_input_dialog_title">Add tasks</string>
     <string name="add">Add</string>
+    <string name="export_database_description">Export a file containing all of your data. This file can be imported back.</string>
+    <string name="import_database_description">Import a previously generated backup file.</string>
+    <string name="export_zip_description">Export all of your data in plain text files for use in other apps. This file cannot be imported back.</string>
 
 </resources>
