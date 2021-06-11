@@ -46,6 +46,11 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         setFragmentResultListener(TASK_INPUT_RESULT) { _, bundle ->
             bundle.getString(TASK_INPUT_TEXT)?.let {
                 viewModel.addTasks(it)
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.tasks_added_message),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->

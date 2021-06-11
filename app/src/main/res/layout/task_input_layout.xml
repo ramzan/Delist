@@ -4,9 +4,10 @@
     android:id="@+id/new_task_input_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="Add tasks (one per line)"
+    android:hint="@string/task_input_hint"
     android:padding="@dimen/defaultPadding"
     app:colorControlActivated="@color/primary_inverse"
+    app:helperText="One task per line"
     app:hintTextColor="@color/primary_inverse">
 
     <com.google.android.material.textfield.TextInputEditText

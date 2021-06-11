@@ -62,5 +62,7 @@
     <string name="collection_deleted_message">Collection deleted</string>
     <string name="archived">Archived</string>
     <string name="export_zip">Export ZIP</string>
+    <string name="tasks_added_message">Tasks added to collection</string>
+    <string name="task_input_hint">New tasks</string>
 
 </resources>
