@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,8 @@ class CollectionListViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    val state = MutableStateFlow<ListState>(ListState.Loading)
+    private val _state = MutableStateFlow<ListState>(ListState.Loading)
+    val state: StateFlow<ListState> get() = _state
 
     init {
         getCollections()
@@ -49,7 +51,7 @@ class CollectionListViewModel @Inject constructor(
                     list.filter { !it.archived }
                 } else list
 
-                state.emit(
+                _state.emit(
                     if (filteredList.isEmpty()) ListState.NoCollections else ListState.Loaded(
                         filteredList
                     )

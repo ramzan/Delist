@@ -13,6 +13,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
@@ -21,15 +22,16 @@ class CollectionEditorViewModel @AssistedInject constructor(
     private val dao: CollectionDatabaseDao
 ) : ViewModel() {
 
-    val state = MutableStateFlow<EditorState>(EditorState.Loading)
+    private val _state = MutableStateFlow<EditorState>(EditorState.Loading)
+    val state: StateFlow<EditorState> get() = _state
 
     init {
         viewModelScope.launch {
-            if (collectionId == 0L) state.emit(EditorState.Loaded())
+            if (collectionId == 0L) _state.emit(EditorState.Loaded())
             else {
                 CoroutineScope(Dispatchers.IO).launch {
                     val oldCollection = dao.getCollection(collectionId)
-                    state.emit(
+                    _state.emit(
                         EditorState.Loaded(
                             oldCollection.name,
                             oldCollection.type,
@@ -47,7 +49,7 @@ class CollectionEditorViewModel @AssistedInject constructor(
             (state.value as? EditorState.Loaded)?.run {
                 val title = nameInputText.trim().replace("\n", "")
                 if (collectionId == 0L) {
-                    state.emit(
+                    _state.emit(
                         EditorState.Saved(
                             dao.createCollection(title, collectionType, color)
                         )
@@ -58,7 +60,7 @@ class CollectionEditorViewModel @AssistedInject constructor(
                         collection.copy(type = collectionType, name = title, color = color),
                         collection.type != collectionType
                     )
-                    state.emit(EditorState.Saved(collectionId))
+                    _state.emit(EditorState.Saved(collectionId))
                 }
             }
         }
@@ -67,7 +69,7 @@ class CollectionEditorViewModel @AssistedInject constructor(
     fun updateColor(newColor: CollectionColor) {
         viewModelScope.launch {
             (state.value as? EditorState.Loaded)?.run {
-                state.emit(this.copy(color = newColor))
+                _state.emit(this.copy(color = newColor))
             }
         }
     }

@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,11 +21,15 @@ class BackupRestoreViewModel @Inject constructor(
     private val dao: CollectionDatabaseDao
 ) : ViewModel() {
 
+    private val _state = MutableStateFlow<BackupRestoreState>(BackupRestoreState.Idle)
+    val state: StateFlow<BackupRestoreState> get() = _state
+
+
     fun import(context: Context, uri: Uri) {
         viewModelScope.launch {
-            state.emit(BackupRestoreState.Processing)
+            _state.emit(BackupRestoreState.Processing)
             CoroutineScope(Dispatchers.IO).launch {
-                state.emit(
+                _state.emit(
                     if (CollectionDatabase.copyFrom(context, uri)) {
                         BackupRestoreState.ImportSuccess
                     } else BackupRestoreState.ImportFailed
@@ -34,7 +39,7 @@ class BackupRestoreViewModel @Inject constructor(
     }
 
     fun onErrorShown() {
-        viewModelScope.launch { state.emit(BackupRestoreState.Idle) }
+        viewModelScope.launch { _state.emit(BackupRestoreState.Idle) }
     }
 
     suspend fun getAllCollections(): List<CollectionExport> {
@@ -44,9 +49,6 @@ class BackupRestoreViewModel @Inject constructor(
     suspend fun getAllTasks(collectionId: Long): List<Task> {
         return dao.getAllTasks(collectionId)
     }
-
-    val state = MutableStateFlow<BackupRestoreState>(BackupRestoreState.Idle)
-
 }
 
 sealed class BackupRestoreState {
