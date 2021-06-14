@@ -73,6 +73,7 @@ class BackupRestoreFragment : BaseFragment<FragmentBackupRestoreBinding>() {
                 }
                 zos.closeEntry()
             }
+            @Suppress("BlockingMethodInNonBlockingContext")
             zos.finish()
             shareFile(zipFile, "application/zip")
         }

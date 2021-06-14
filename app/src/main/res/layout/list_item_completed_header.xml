@@ -5,18 +5,16 @@
     android:orientation="vertical">
 
     <View
-        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="@dimen/defaultPadding"
         android:background="@color/primary_inverse" />
 
     <TextView
-        android:id="@+id/completed_task_list_header"
         style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/defaultPadding"
-        android:text="Completed tasks" />
+        android:text="@string/completed_tasks" />
 
 </LinearLayout>

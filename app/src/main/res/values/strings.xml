@@ -2,7 +2,6 @@
     <string name="app_name">Delist</string>
     <string name="name_input_hint">Name</string>
     <string name="new_collection_button_description">New collection button</string>
-    <string name="collection_type_input_hint">Task order</string>
     <string name="create_collection">Create collection</string>
     <string name="edit_collection">Edit collection</string>
     <string name="type_queue">Oldest task first</string>
@@ -28,17 +27,6 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="system">System</string>
-
-    <string-array name="collection_type_array">
-        <item>@string/type_queue</item>
-        <item>@string/type_stack</item>
-        <item>@string/type_randomizer</item>
-    </string-array>
-
-    <plurals name="n_completed_tasks">
-        <item quantity="one">%d completed task</item>
-        <item quantity="other">%d completed tasks</item>
-    </plurals>
 
     <string-array name="theme_string_array">
         <item>@string/light</item>
@@ -69,5 +57,16 @@
     <string name="export_database_description">Export a file containing all of your data. This file can be imported back.</string>
     <string name="import_database_description">Import a previously generated backup file.</string>
     <string name="export_zip_description">Export all of your data in plain text files for use in other apps. This file cannot be imported back.</string>
+    <string name="color_button_description">Color option button</string>
+    <string name="edit">Edit</string>
+    <string name="export">Export</string>
+    <string name="archive">Archive</string>
+    <string name="unarchive">Unarchive</string>
+    <string name="delete_collection">Delete collection</string>
+    <string name="delete_completed">Delete completed</string>
+    <string name="save">Save</string>
+    <string name="done">Done</string>
+    <string name="add_tasks">Add tasks</string>
+    <string name="completed_tasks">Completed tasks</string>
 
 </resources>

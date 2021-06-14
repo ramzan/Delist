@@ -52,12 +52,6 @@ abstract class CollectionDatabase : RoomDatabase() {
             }
         }
 
-        fun copyTo(context: Context, uri: Uri) {
-            context.contentResolver.openOutputStream(uri)?.use { stream ->
-                context.getDatabasePath(DB_NAME).inputStream().copyTo(stream)
-            }
-        }
-
         fun copyFrom(context: Context, uri: Uri): Boolean {
             Log.d(TAG, "Starting import")
             context.contentResolver.openInputStream(uri)?.use { stream ->

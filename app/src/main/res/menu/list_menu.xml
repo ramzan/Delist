@@ -4,7 +4,6 @@
     android:icon="@drawable/ic_baseline_sort_24">
 
     <item
-        android:id="@+id/sort_filter_menu"
         android:contentDescription="@string/sort_and_filter"
         android:icon="@drawable/ic_baseline_filter_list_24"
         android:title="@string/sort_and_filter"
@@ -19,7 +18,6 @@
                 app:showAsAction="never" />
 
             <item
-                android:id="@+id/sort"
                 android:contentDescription="@string/sort"
                 android:title="@string/sort"
                 app:showAsAction="never">

@@ -1,5 +1,6 @@
 package ca.ramzan.delist.screens.color_picker
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +18,8 @@ class ColorAdapter(private val dataSet: IntArray, private val onClickListener: (
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        val background = view.findViewById<ImageButton>(R.id.color_button).background
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val background: Drawable = view.findViewById<ImageButton>(R.id.color_button).background
     }
 
     // Create new views (invoked by the layout manager)

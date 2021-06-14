@@ -5,4 +5,5 @@
     android:layout_height="48dp"
     android:layout_margin="8dp"
     android:background="@drawable/list_item_color_bg"
+    android:contentDescription="@string/color_button_description"
     android:foreground="@drawable/list_item_color_fg" />

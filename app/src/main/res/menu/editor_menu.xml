@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/save"
-        android:contentDescription="Save"
-        android:title="Save"
+        android:contentDescription="@string/save"
+        android:title="@string/save"
         app:showAsAction="ifRoom" />
 
 </menu>
