@@ -54,7 +54,7 @@ class CollectionEditorFragment : BaseFragment<FragmentCollectionEditorBinding>()
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mutableBinding = FragmentCollectionEditorBinding.inflate(inflater)
+        setUpBinding(FragmentCollectionEditorBinding.inflate(inflater))
 
         binding.apply {
             editorToolbar.setNavigationOnClickListener {

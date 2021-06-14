@@ -71,7 +71,7 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mutableBinding = FragmentCollectionDetailBinding.inflate(inflater)
+        setUpBinding(FragmentCollectionDetailBinding.inflate(inflater))
 
         val adapter = CollectionDetailAdapter(object : CollectionDetailAdapter.OnClickListener {
             override fun onCreateTask() {

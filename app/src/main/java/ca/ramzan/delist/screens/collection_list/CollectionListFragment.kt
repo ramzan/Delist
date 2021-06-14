@@ -95,7 +95,7 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mutableBinding = FragmentCollectionListBinding.inflate(inflater)
+        setUpBinding(FragmentCollectionListBinding.inflate(inflater))
         setUpBottomBar()
 
         val adapter = CollectionAdapter(

@@ -4,11 +4,15 @@ import androidx.fragment.app.Fragment
 
 open class BaseFragment<BINDING_TYPE> : Fragment() {
 
-    protected var mutableBinding: BINDING_TYPE? = null
-    protected val binding get() = mutableBinding!!
+    private var _binding: BINDING_TYPE? = null
+    protected val binding get() = _binding!!
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mutableBinding = null
+        _binding = null
+    }
+
+    fun setUpBinding(bindingType: BINDING_TYPE) {
+        _binding = bindingType
     }
 }

@@ -98,7 +98,7 @@ class BackupRestoreFragment : BaseFragment<FragmentBackupRestoreBinding>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mutableBinding = FragmentBackupRestoreBinding.inflate(inflater)
+        setUpBinding(FragmentBackupRestoreBinding.inflate(inflater))
 
         binding.editorToolbar.setNavigationOnClickListener {
             findNavController().popBackStack(
