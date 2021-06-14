@@ -1,0 +1,9 @@
+<p>Delist provides a different take on to-do lists, allowing you to think less and get more done.</p>
+<p><b>Collect</b></p>
+<p>Create collections to gather all your tasks and ideas.</p>
+<p><b>Organize</b></p>
+<p>Choose the order in which you wish to complete your tasks: newest first, oldest first, or random.</p>
+<p><b>Focus</b></p>
+<p>Delist helps you focus by showing only one task at a time.</p>
+<p><b>Offline, ad-free, and open source</b></p>
+<p>No advertisements, annoying notifications, intrusive permissions, or trackers in this app. Your data is yours. The complete source code is available under an open-source license (GPLv3).</p>
