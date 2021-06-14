@@ -56,6 +56,7 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
         setFragmentResultListener(CONFIRMATION_RESULT) { _, bundle ->
             if (bundle.getBoolean(KEY_COLLECTION_DELETED, false)) {
                 viewModel.deleteCollection()
+                goBackDeleted()
             } else if (bundle.getBoolean(KEY_COMPLETED_DELETED, false)) {
                 viewModel.clearCompleted()
                 Snackbar.make(
