@@ -1,0 +1,1 @@
+Fix system navigation bar covering bottom app bar
