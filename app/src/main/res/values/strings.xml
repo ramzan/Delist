@@ -68,5 +68,7 @@
     <string name="done">Done</string>
     <string name="add_tasks">Add tasks</string>
     <string name="completed_tasks">Completed tasks</string>
+    <string name="incomplete_tasks">Incomplete tasks</string>
+    <string name="hide_show_tasks">Hide/show tasks</string>
 
 </resources>

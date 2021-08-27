@@ -91,6 +91,14 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                     }
                     .show()
             }
+
+            override fun toggleCompletedShown() {
+                viewModel.toggleCompletedShown()
+            }
+
+            override fun toggleIncompleteShown() {
+                viewModel.toggleIncompleteShown()
+            }
         })
 
         binding.completedTaskList.adapter = adapter
@@ -187,11 +195,13 @@ class CollectionDetailFragment : BaseFragment<FragmentCollectionDetailBinding>()
                             }
                         }
 
-                        if (state.completedTasks.isEmpty()) {
-                            adapter.submitNoCompleted(state.collection.task)
-                        } else {
-                            adapter.submitWithCompleted(state.collection.task, state.completedTasks)
-                        }
+                        adapter.submit(
+                            state.collection.task,
+                            state.completedTasks,
+                            state.incompleteTasks,
+                            state.showCompleted,
+                            state.showIncomplete
+                        )
 
                         binding.detailProgressBar.visibility = View.GONE
                         binding.completedTaskList.visibility = View.VISIBLE

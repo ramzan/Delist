@@ -5,37 +5,79 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import ca.ramzan.delist.room.CollectionDatabaseDao
 import ca.ramzan.delist.room.CollectionDisplayData
-import ca.ramzan.delist.room.CompletedTaskDisplay
 import ca.ramzan.delist.room.Task
+import ca.ramzan.delist.room.TaskDisplay
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+sealed class DetailState {
+
+    object Loading : DetailState()
+    object Deleted : DetailState()
+    data class Loaded(
+        val collection: CollectionDisplayData,
+        val completedTasks: List<TaskDisplay>,
+        val incompleteTasks: List<TaskDisplay>,
+        val showCompleted: Boolean = true,
+        val showIncomplete: Boolean = true
+    ) : DetailState()
+}
+
+private data class ListVisibility(
+    val showCompleted: Boolean = true,
+    val showIncomplete: Boolean = false
+) {
+    fun toggleCompleted() = this.copy(showCompleted = !showCompleted)
+    fun toggleIncomplete() = this.copy(showIncomplete = !showIncomplete)
+}
 
 class CollectionDetailViewModel @AssistedInject constructor(
     @Assisted private val collectionId: Long,
     private val dao: CollectionDatabaseDao
 ) : ViewModel() {
 
-    val state = MutableStateFlow<DetailState>(DetailState.Loading)
-
-    init {
+    private val listVisibility = MutableStateFlow(ListVisibility())
+    fun toggleCompletedShown() {
         viewModelScope.launch {
-            dao.getCollectionDisplay(collectionId)
-                .combine(dao.getCompletedTasks(collectionId)) { collectionData, completedTasks ->
-                    if (collectionData == null) DetailState.Deleted
-                    else DetailState.Loaded(collectionData, completedTasks)
-                }.collect {
-                    state.emit(it)
-                }
+            listVisibility.value = listVisibility.value.toggleCompleted()
         }
     }
+
+    fun toggleIncompleteShown() {
+        viewModelScope.launch {
+            listVisibility.value = listVisibility.value.toggleIncomplete()
+        }
+    }
+
+    private val tasks = dao.getTasks(collectionId).map { tasks ->
+        val completeStart = tasks.indexOfFirst { it.completed != null }.let {
+            if (it == -1) tasks.size else it
+        }
+        Pair(
+            tasks.subList(completeStart, tasks.size),
+            tasks.subList(0, completeStart)
+        )
+    }.stateIn(CoroutineScope(Dispatchers.IO), Eagerly, Pair(emptyList(), emptyList()))
+
+    val state = dao.getCollectionDisplay(collectionId)
+        .combine(tasks) { collectionData, tasks ->
+            if (collectionData == null) DetailState.Deleted
+            else DetailState.Loaded(collectionData, tasks.first, tasks.second)
+        }.combine(listVisibility) { detailState, visibility ->
+            if (detailState is DetailState.Loaded) detailState.copy(
+                showCompleted = visibility.showCompleted,
+                showIncomplete = visibility.showIncomplete
+            ) else detailState
+        }.stateIn(CoroutineScope(Dispatchers.Default), Eagerly, DetailState.Loading)
 
     fun deleteCollection() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -104,14 +146,4 @@ class CollectionDetailViewModel @AssistedInject constructor(
     }
 
 // endregion Factory ---------------------------------------------------------------------------
-}
-
-sealed class DetailState {
-
-    object Loading : DetailState()
-    object Deleted : DetailState()
-    data class Loaded(
-        val collection: CollectionDisplayData,
-        val completedTasks: List<CompletedTaskDisplay>
-    ) : DetailState()
 }

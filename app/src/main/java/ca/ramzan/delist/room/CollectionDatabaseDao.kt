@@ -164,14 +164,13 @@ interface CollectionDatabaseDao {
 
     @Query(
         """
-            SELECT id, content
+            SELECT id, content, timeCompleted AS completed
             FROM task_table
             WHERE task_table.collectionId = :collectionId
-            AND timeCompleted IS NOT NULL
             ORDER BY timeCompleted
     """
     )
-    fun getCompletedTasks(collectionId: Long): Flow<List<CompletedTaskDisplay>>
+    fun getTasks(collectionId: Long): Flow<List<TaskDisplay>>
 
 
     fun getRandomTask(collectionId: Long): Long? {

@@ -2,6 +2,8 @@ package ca.ramzan.delist.screens.collection_detail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +11,7 @@ import ca.ramzan.delist.R
 import ca.ramzan.delist.databinding.ListItemCollectionDetailBinding
 import ca.ramzan.delist.databinding.ListItemCompletedHeaderBinding
 import ca.ramzan.delist.databinding.ListItemCompletedTaskBinding
-import ca.ramzan.delist.room.CompletedTaskDisplay
+import ca.ramzan.delist.room.TaskDisplay
 
 private const val ITEM_VIEW_TYPE_DETAIL = 0
 private const val ITEM_VIEW_TYPE_HEADER = 1
@@ -24,12 +26,14 @@ class CollectionDetailAdapter(private val onClickListener: OnClickListener) :
     interface OnClickListener {
         fun onCreateTask()
         fun onCompleteTask()
+        fun toggleCompletedShown()
+        fun toggleIncompleteShown()
     }
 
     class ListItemCompletedTaskViewHolder(private val binding: ListItemCompletedTaskBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CollectionDetailListItem.CompletedTask) {
+        fun bind(item: CollectionDetailListItem.Task) {
             binding.completedTaskText.text =
                 binding.root.context.getString(R.string.bulleted_list_item, item.content)
         }
@@ -43,14 +47,31 @@ class CollectionDetailAdapter(private val onClickListener: OnClickListener) :
         }
     }
 
-    class ListItemCompletedHeaderViewHolder(binding: ListItemCompletedHeaderBinding) :
+    class ListItemHeaderViewHolder(private val binding: ListItemCompletedHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        fun bind(@StringRes title: Int, expanded: Boolean, toggleExpanded: () -> Unit) {
+            val context = binding.root.context
+            binding.apply {
+                headerTitle.text = context.getString(title)
+                collapseButton.setOnClickListener { toggleExpanded() }
+                collapseButton.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        if (expanded) R.drawable.ic_baseline_arrow_up_36
+                        else R.drawable.ic_baseline_arrow_down_36,
+                        context.theme
+                    )
+                )
+            }
+
+        }
+
         companion object {
-            fun from(parent: ViewGroup): ListItemCompletedHeaderViewHolder {
+            fun from(parent: ViewGroup): ListItemHeaderViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = ListItemCompletedHeaderBinding.inflate(layoutInflater, parent, false)
-                return ListItemCompletedHeaderViewHolder(binding)
+                return ListItemHeaderViewHolder(binding)
             }
         }
     }
@@ -89,10 +110,28 @@ class CollectionDetailAdapter(private val onClickListener: OnClickListener) :
         val item = getItem(position)
         when (holder) {
             is ListItemCompletedTaskViewHolder -> holder.bind(
-                item as CollectionDetailListItem.CompletedTask
+                item as CollectionDetailListItem.Task
             )
-            is ListItemCompletedHeaderViewHolder -> {
-                /* no-op */
+            is ListItemHeaderViewHolder -> {
+                when (item) {
+                    is CollectionDetailListItem.CompletedHeader -> {
+                        holder.bind(
+                            R.string.completed_tasks,
+                            item.expanded,
+                            onClickListener::toggleCompletedShown
+                        )
+                    }
+                    is CollectionDetailListItem.IncompleteHeader -> {
+                        holder.bind(
+                            R.string.incomplete_tasks,
+                            item.expanded,
+                            onClickListener::toggleIncompleteShown
+                        )
+                    }
+                    else -> {
+                        /* no-op */
+                    }
+                }
             }
             is ListItemCollectionDetailViewHolder -> {
                 holder.bind(
@@ -108,7 +147,7 @@ class CollectionDetailAdapter(private val onClickListener: OnClickListener) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_DETAIL -> ListItemCollectionDetailViewHolder.from(parent)
-            ITEM_VIEW_TYPE_HEADER -> ListItemCompletedHeaderViewHolder.from(parent)
+            ITEM_VIEW_TYPE_HEADER -> ListItemHeaderViewHolder.from(parent)
             ITEM_VIEW_TYPE_COMPLETED_TASK -> ListItemCompletedTaskViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
@@ -116,27 +155,29 @@ class CollectionDetailAdapter(private val onClickListener: OnClickListener) :
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is CollectionDetailListItem.CompletedTask -> ITEM_VIEW_TYPE_COMPLETED_TASK
+            is CollectionDetailListItem.Task -> ITEM_VIEW_TYPE_COMPLETED_TASK
             is CollectionDetailListItem.DetailItem -> ITEM_VIEW_TYPE_DETAIL
-            CollectionDetailListItem.CompletedHeader -> ITEM_VIEW_TYPE_HEADER
+            is CollectionDetailListItem.CompletedHeader -> ITEM_VIEW_TYPE_HEADER
+            is CollectionDetailListItem.IncompleteHeader -> ITEM_VIEW_TYPE_HEADER
         }
     }
 
-
-    fun submitNoCompleted(taskString: String?) {
-        submitList(listOf(CollectionDetailListItem.DetailItem(taskString)))
-    }
-
-    fun submitWithCompleted(
+    fun submit(
         taskString: String?,
-        completedTasks: List<CompletedTaskDisplay>
+        completedTasks: List<TaskDisplay>,
+        incompleteTasks: List<TaskDisplay>,
+        showCompleted: Boolean,
+        showIncomplete: Boolean
     ) {
-        submitList(
-            listOf(
-                CollectionDetailListItem.DetailItem(taskString),
-                CollectionDetailListItem.CompletedHeader
-            ) + completedTasks.map { CollectionDetailListItem.CompletedTask(it) }
+        val list = mutableListOf<CollectionDetailListItem>(
+            CollectionDetailListItem.DetailItem(taskString),
         )
+        list += listOf(CollectionDetailListItem.CompletedHeader(showCompleted))
+        if (showCompleted) list += completedTasks.map { CollectionDetailListItem.Task(it) }
+        list += listOf(CollectionDetailListItem.IncompleteHeader(showIncomplete))
+        if (showIncomplete) list += incompleteTasks.map { CollectionDetailListItem.Task(it) }
+
+        submitList(list)
     }
 }
 
@@ -153,9 +194,10 @@ class CollectionDetailListItemDiffCallback : DiffUtil.ItemCallback<CollectionDet
         newItem: CollectionDetailListItem
     ): Boolean {
         return when (oldItem) {
-            is CollectionDetailListItem.CompletedTask -> oldItem.content == (newItem as CollectionDetailListItem.CompletedTask).content
+            is CollectionDetailListItem.Task -> oldItem.content == (newItem as CollectionDetailListItem.Task).content
             is CollectionDetailListItem.DetailItem -> oldItem.currentTask == (newItem as CollectionDetailListItem.DetailItem).currentTask
-            is CollectionDetailListItem.CompletedHeader -> true
+            is CollectionDetailListItem.CompletedHeader -> oldItem.expanded == (newItem as CollectionDetailListItem.CompletedHeader).expanded
+            is CollectionDetailListItem.IncompleteHeader -> oldItem.expanded == (newItem as CollectionDetailListItem.IncompleteHeader).expanded
         }
     }
 }
@@ -167,11 +209,15 @@ sealed class CollectionDetailListItem {
         override val id = -1L
     }
 
-    object CompletedHeader : CollectionDetailListItem() {
+    data class CompletedHeader(val expanded: Boolean) : CollectionDetailListItem() {
         override val id = -2L
     }
 
-    class CompletedTask(data: CompletedTaskDisplay) : CollectionDetailListItem() {
+    data class IncompleteHeader(val expanded: Boolean) : CollectionDetailListItem() {
+        override val id = -3L
+    }
+
+    class Task(data: TaskDisplay) : CollectionDetailListItem() {
         override val id = data.id
         val content = data.content
     }

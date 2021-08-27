@@ -26,7 +26,8 @@ data class Task(
     val id: Long = 0,
 )
 
-class CompletedTaskDisplay(
+class TaskDisplay(
     val id: Long,
-    val content: String
+    val content: String,
+    val completed: Long?
 )
