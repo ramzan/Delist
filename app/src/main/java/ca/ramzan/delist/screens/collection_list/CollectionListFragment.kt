@@ -1,6 +1,5 @@
 package ca.ramzan.delist.screens.collection_list
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -54,7 +53,6 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
 
     private var itemTouchHelper: ItemTouchHelper? = null
 
-    @SuppressLint("ShowToast")
     override fun onResume() {
         super.onResume()
         CoroutineScope(Dispatchers.Default).launch {
@@ -162,7 +160,6 @@ class CollectionListFragment : BaseFragment<FragmentCollectionListBinding>() {
         )
     }
 
-    @SuppressLint("ShowToast")
     private fun completeTask(collectionId: Long) {
         viewModel.completeTask(collectionId)
         Snackbar.make(
