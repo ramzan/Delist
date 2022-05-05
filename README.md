@@ -2,11 +2,6 @@
 <h2 align="center"><b>Delist</b></h2>
 <h4 align="center">Focus on the task at hand</h4>
 <p align="center">
-<a href="https://play.google.com/store/apps/details?id=ca.ramzan.delist">
-  <img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
-       alt="Get it on Google Play"
-       height="100">
-</a>
 <a href="https://f-droid.org/packages/ca.ramzan.delist">
     <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
